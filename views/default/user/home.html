@@ -1,0 +1,64 @@
+{% include "../header.html" %}
+<link href="/css/userCenter.min.css" rel="stylesheet">
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="sidebar col-md-3" id="sidebar">
+            <div class="card profile">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="avatar media-left mr-3">
+                            <div class="image">
+                                {% if userInfo.avatar != "" %}
+                                    <img class="media-object avatar-96" src="{{ userInfo.avatar }}">
+                                {% else %}
+                                    <img class="media-object avatar-96" src="/images/medium-default-avatar.png"></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <div class="item">{{ userInfo.nickname }} <span class="opts pull-right"></span></div>
+                            <div class="item number"><time class="timeago" datetime='{{ date("Y-m-d H:i:s", userInfo.created) }}'>{{ date("Y-m-d", userInfo.created) }}</time></div>
+                            <div class="item counts">Published<span>{{ postCount }}</span>Posts</div>
+                            <div class="item social">
+                                {% if userInfo.email != "" %}
+                                    <a href="mailto: {{ userInfo.email }}"><i class="fa fa-envelope-o"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tagline row">{% if userInfo.introduce != "" %}{{ userInfo.introduce }}{% else %}That guy is too lazy to introduce himself or herself{% endif %}</div>
+                    <div class="buttons"></div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-9">
+            <div class="tabbable">
+                <div class="tab-content">
+                        <div class="tab-pane active recent-topics" id="topics">
+                        <div class="card">
+                            <div class="card-header">Participating hot threads</div>
+                            <ul class="list-group list-group-flush">
+                                {% for thread in threads %}
+                                <li class="list-group-item">
+                                    <div class="title">
+                                            {% for forum in threadForums %}
+                                                {% if forum.id == thread.forum_id %}
+                                                    <a class="node" href="/forum/{{ forum.id }}">{{ forum.name }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        <a title="{{ thread.title }}" href="/thread/{{ thread.id }}">{{ thread.title }}</a>
+                                    </div>
+                                    <div class="info"><span class="counter">{{ thread.posts }} replies</span></div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "../footer.html" %}

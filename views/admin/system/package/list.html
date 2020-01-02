@@ -1,0 +1,98 @@
+{% include "../../header.html" %} {% include "../../navigation.html" %}
+
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+            <div class="row">
+                    <div class="col-sm-12">
+                            <div class="page-title-box">
+                                <div class="btn-group pull-right">
+                                    <h4 class="page-title">Menus</h4>
+                                </div>
+                                <ol class="breadcrumb hide-phone p-0 m-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="#">HuntCMS</a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="#">Package</a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Package List</li>
+                                </ol>
+                            </div>
+                    </div>
+            </div>
+        <!-- end page title end breadcrumb -->
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="m-b-30">
+                                <a href="{{ url('system.langpackage.add', '')}}" id="addToTable" class="btn btn-success waves-effect waves-light">Add
+                                    <i class="mdi mdi-plus-circle-outline"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped add-edit-table" id="datatable-editable">
+                        <thead>
+                            <tr>
+                                <th data-toggle="true">Id</th>
+                                <th>Local</th>
+                                <th>Key</th>
+                                <th>Value</th>
+                                <th data-hide="phone">Created</th>
+                                <th data-hide="phone, tablet">Updated</th>
+                                <th data-hide="phone, tablet">Operate</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            {% for oneData in package %}
+                            <tr>
+                                <td>{{ oneData.id }}</td>
+                                <td>{{ oneData.local }}</td>
+                                <td>{{ oneData.key }}</td>
+                                <td>{{ oneData.value }}</td>
+                                <td>{{ date('Y-m-d H:i:s',oneData.created) }}</td>
+                                <td>{{ date('Y-m-d H:i:s',oneData.updated) }}</td>
+                                <td class="actions">
+                                    <a href="{{ url('system.langpackage.edit', '')}}?id={{ oneData.id }}" class="on-default edit-row" data-toggle="tooltip" data-placement="top"
+                                        title="" data-original-title="Click Edit">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="{{ url('system.langpackage.del' , '')}}?id={{ oneData.id }}" class="on-default remove-row" data-toggle="tooltip" data-placement="top"
+                                        title="" data-original-title="Click Delete" onclick="javascript:if(!confirm('Are you sure to delete？'))return false;">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="active">
+                                <td colspan="5">
+                                    <div class="text-right">
+                                        {{ pageView }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            {% include "../../paginate.html" %}
+        </div>
+        <!-- end row -->
+
+    </div>
+    <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}

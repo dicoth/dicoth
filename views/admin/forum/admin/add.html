@@ -1,0 +1,123 @@
+{% include "../../header.html" %} {% include "../../navigation.html" %}
+
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <h4 class="page-title">Add Forum</h4>
+                    </div>
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">HuntCMS</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Forum</a>
+                        </li>
+                        <li class="breadcrumb-item active">Add Forum</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card-box">
+                    <h4 class="m-t-0 header-title">Add Forum</h4>
+                    <p class="text-muted m-b-30 font-14">
+                        User can add Forum.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="p-20">
+                                <form class="form-horizontal" enctype="multipart/form-data" role="form" action="" method="post">
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Node type</label>
+                                        <div class="col-10">
+                                            <select class="form-control" name="typeId">
+                                                <option value="1">Category</option>
+                                                <option value="2">Forum</option>
+                                                <option value="3">Link</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Parent forum</label>
+                                        <div class="col-10">
+                                            <select class="form-control" name="pid">
+                                                <option value="0">(None)</option>
+                                                {% for item in groupForums %}
+                                                <option value="{{item.forum.id}}">{{item.prefix}}{{item.forum.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Name</label>
+                                        <div class="col-10">
+                                            <input type="text" class="form-control" required id="name" name="name" placeholder="Some text value...">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Description</label>
+                                        <div class="col-10">
+                                            <input type="text" class="form-control" required id="description" name="description" placeholder="Some text value...">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Icon</label>
+                                        <div class="col-10">
+                                            <input type="text" class="form-control" required id="icon" name="icon" placeholder="Some text value...">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-2 col-form-label">Status</label>
+                                        <div class="col-10">
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="statusRadio1" name="statusRadio" class="custom-control-input" value="1" checked>
+                                                <label class="custom-control-label" for="statusRadio1">Enabled</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="statusRadio2" name="statusRadio" class="custom-control-input" value="0">
+                                                <label class="custom-control-label" for="statusRadio2">Disabled</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-0 justify-content-end row">
+                                        <div class="col-md-10">
+                                            <input type="hidden" class="form-control" name="id" placeholder="Some text value...">
+                                            <button type="submit"  class="btn btn-info waves-effect waves-light">Create</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- end row -->
+
+                </div>
+                <!-- end card-box -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+
+    </div>
+    <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}

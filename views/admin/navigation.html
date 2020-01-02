@@ -1,0 +1,166 @@
+
+<!-- Navigation Bar-->
+<header id="topnav">
+    <div class="topbar-main">
+        <div class="container-fluid">
+
+            <!-- Logo container-->
+            <div class="logo">
+                <!-- Text Logo -->
+                <a href="" class="logo">
+                    <span class="logo-small"><i class="mdi mdi-fire"></i></span>
+                    <span class="logo-large"><i class="mdi mdi-fire"></i> HuntCMS</span>
+                </a>
+                <!-- Image Logo -->
+            </div>
+            <!-- End Logo container-->
+
+            <div class="menu-extras topbar-custom">
+
+                <ul class="list-inline float-right mb-0">
+
+                    <li class="menu-item list-inline-item">
+                        <!-- Mobile menu toggle-->
+                        <a class="navbar-toggle nav-link">
+                            <div class="lines">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </a>
+                        <!-- End mobile menu toggle-->
+                    </li>
+                    <!--<li class="list-inline-item dropdown notification-list">-->
+                        <!--<a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button"-->
+                            <!--aria-haspopup="false" aria-expanded="false">-->
+                            <!--<i class="mdi mdi-bell noti-icon"></i>-->
+                            <!--<span class="badge badge-pink noti-icon-badge">4</span>-->
+                        <!--</a>-->
+                        <!--<div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg" aria-labelledby="Preview">-->
+                            <!--&lt;!&ndash; item&ndash;&gt;-->
+                            <!--<div class="dropdown-item noti-title">-->
+                                <!--<h5 class="font-16"><span class="badge badge-danger float-right">5</span>Notification</h5>-->
+                            <!--</div>-->
+
+                            <!--&lt;!&ndash; item&ndash;&gt;-->
+                            <!--<a href="javascript:void(0);" class="dropdown-item notify-item">-->
+                                <!--<div class="notify-icon bg-success"><i class="mdi mdi-comment-account"></i></div>-->
+                                <!--<p class="notify-details">Robert S. Taylor commented on Admin<small class="text-muted">1 min ago</small></p>-->
+                            <!--</a>-->
+
+                            <!--&lt;!&ndash; item&ndash;&gt;-->
+                            <!--<a href="javascript:void(0);" class="dropdown-item notify-item">-->
+                                <!--<div class="notify-icon bg-info"><i class="mdi mdi-account"></i></div>-->
+                                <!--<p class="notify-details">New user registered.<small class="text-muted">1 min ago</small></p>-->
+                            <!--</a>-->
+
+                            <!--&lt;!&ndash; item&ndash;&gt;-->
+                            <!--<a href="javascript:void(0);" class="dropdown-item notify-item">-->
+                                <!--<div class="notify-icon bg-danger"><i class="mdi mdi-airplane"></i></div>-->
+                                <!--<p class="notify-details">Carlos Crouch liked <b>Admin</b><small class="text-muted">1 min ago</small></p>-->
+                            <!--</a>-->
+
+                            <!--&lt;!&ndash; All&ndash;&gt;-->
+                            <!--<a href="javascript:void(0);" class="dropdown-item notify-item notify-all">-->
+                                <!--View All-->
+                            <!--</a>-->
+
+                        <!--</div>-->
+                    <!--</li>-->
+
+                    <li class="list-inline-item dropdown notification-list">
+                        <a class="nav-link dropdown-toggle waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
+                            aria-haspopup="false" aria-expanded="false">
+                            <img src="/admin/images/users/avatar-1.jpg" alt="user" class="rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
+                            <!-- item-->
+                            <div class="dropdown-item noti-title">
+                                <h5 class="text-overflow"><small class="text-white">Welcome ! {{nowUser.name}}</small> </h5>
+                            </div>
+
+                            <!-- item-->
+                            <a href="{{ url('system.user.profile', '')}}" class="dropdown-item notify-item">
+                                <i class="mdi mdi-account"></i> <span>Profile</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="{{ url('system.setting.list', '')}}" class="dropdown-item notify-item">
+                                <i class="mdi mdi-settings"></i> <span>Settings</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="{{ url('system.user.logout', '')}}" class="dropdown-item notify-item">
+                                <i class="mdi mdi-logout"></i> <span>Logout</span>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- end menu-extras -->
+
+            <div class="clearfix"></div>
+
+        </div> <!-- end container -->
+    </div>
+    <!-- end topbar-main -->
+
+    <div class="navbar-custom">
+        <div class="container-fluid">
+            <div id="navigation">
+                <!-- Navigation Menu-->
+                <ul class="navigation-menu">   
+                    {% for v in menusJsonData %}
+                        <li class="has-submenu">
+                            <a href="{{v.user_link}}"><i class="{{v.icon_class}}"></i>{{v.name}}</a>
+                            {% if v.menus and length(v.menus) > 0 %}
+                                <ul class="submenu">
+                                    {% for m in v.menus %}
+                                    <li><a href="{{m.user_link}}">{% if m.keyword %}{{ trans(m.keyword) }}{% else %}{{m.name}}{% endif %}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}                                                    
+                        </li>
+                    {% endfor %}
+
+                    <!-- <li class="has-submenu active">
+                        <a href="index.html"><i class="ti-home"></i>Dashboard</a>
+                    </li>         
+
+                    <li class="has-submenu">
+                        <a href="#"><i class="ti-widget"></i>Article</a>
+                        <ul class="submenu">
+                            <li><a href="/article/articles">Articles</a></li>
+                            <li><a href="/article/article/add">Add</a></li>
+                            <li><a href="/article/categories">Categories</a></li>
+                            <li><a href="/article/category/add">Add</a></li>
+                            <li><a href="#ui-portlets.html">Tags</a></li>
+                            <li><a href="#ui-checkbox-radio.html">Search</a></li>
+                            <li><a href="#ui-tabs.html">Comments</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="has-submenu">
+                        <a href="#"><i class="ti-panel"></i>System</a>
+                        <ul class="submenu megamenu">
+                            <li>
+                                <ul>
+                                    <li><a href="/system/menus">Menus</a></li>
+                                    <li><a href="/system/permissions">Permissions</a></li>
+                                    <li><a href="/system/users">Users</a></li>
+                                    <li><a href="/system/roles">Roles</a></li>
+                                    <li><a href="/system/logs">Logs</a></li>
+                                    <li><a href="#">Settings</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li> -->
+
+                </ul>
+                <!-- End navigation menu -->
+            </div> <!-- end #navigation -->
+        </div> <!-- end container -->
+    </div> <!-- end navbar-custom -->
+</header>
+<!-- End Navigation Bar-->

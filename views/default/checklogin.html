@@ -1,0 +1,13 @@
+<script>
+    var isLogin = {{ isLogin }};
+    var isRef = {{ isRef }};
+    if(isLogin == "0" )
+    {
+        parent.location.reload();
+    }
+    if(isRef == "1")
+    {
+        window.parent.location.reload();
+        window.close();
+    }
+</script>

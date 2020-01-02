@@ -1,0 +1,131 @@
+{% include "../../header.html" %} {% include "../../navigation.html" %}
+
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <h4 class="page-title">Permission</h4>
+                    </div>
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">HuntCMS</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Permission</a>
+                        </li>
+                        <li class="breadcrumb-item active">Permission List</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="m-b-30">
+                                <a href="{{ url('system.permission.add', '')}}" id="addToTable" class="btn btn-success waves-effect waves-light">Add
+                                    <i class="mdi mdi-plus-circle-outline"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped add-edit-table" id="datatable-editable">
+                        <thead>
+                            <tr>
+                                <th data-toggle="true">Id</th>
+                                <th>MCA</th>
+                                <th>Title</th>
+                                <th>Permission Group</th>
+                                <th data-hide="phone">isAction</th>
+                                <th data-hide="phone">Created</th>
+                                <th data-hide="phone, tablet">Updated</th>
+                                <th data-hide="phone, tablet">Status</th>
+                                <th data-hide="phone, tablet">Operate</th>
+                            </tr>
+                        </thead>
+                        <div class="row">
+                            <div class="col-md-12 text-xs-center">
+                                    <form class="form-horizontal" role="form" action="" method="get">
+                                
+                                            <div class="form-group float-left m-r-5">
+                                                    <select name = "s" id="demo-foo-filter-status" class="form-control input-sm">
+                                                            <option value="-1">Show all</option>
+                                                            <option value="1">{{ trans("COMMON_SYSTEM_ENABLED") }}</option>
+                                                            <option value="0">{{ trans("COMMON_SYSTEM_DISABLED") }}</option>
+                                                        </select>
+                                            </div>
+                                            <div class="form-group float-left m-r-5">
+                                                    <div class="form-group float-right">
+                                                            <input name = "k" id="demo-foo-search" type="text" placeholder="Search Name" class="form-control" autocomplete="on">
+                                                        </div>
+                                                </div>
+                                            <div class="form-group float-left m-r-5">
+                                                <button type="submit"
+                                                        class="btn btn-icon waves-effect waves-light btn-success m-b-5"><i
+                                                        class="fa fa-search"></i></button>
+                                            </div>
+                                            <div class="form-group float-left m-r-5">
+                                                <a href="{{ url('system.permission.list' , '')}}"
+                                                   class="btn btn-icon waves-effect waves-light btn-success m-b-5"><i
+                                                        class="fa fa-refresh"></i></a>
+                                            </div>
+                                        </form>
+                                
+                            </div>
+                        </div>
+                        <tbody>
+                            {% for permission in permissions %}
+                            <tr>
+                                <td>{{ permission.id }}</td>
+                                <td>{{ permission.mca }}</td>
+                                <td>{{ permission.title }}</td>
+                                <td>{% if permission.group_id == 0 %}
+                                            NO GROUP
+                                        {% else %}
+                                            {% for group in groups %}{% if group.id == permission.group_id %}{{ group.title }}{% endif %}{% endfor %}
+                                        {% endif %}</td>
+                                <td>{{ permission.isAction }}</td>
+                                <td>{{ date('Y-m-d H:i:s',permission.created) }}</td>
+                                <td>{{ date('Y-m-d H:i:s',permission.updated) }}</td>
+                                <td>
+                                    <span class="badge label-table badge-success">
+                                        {% if permission.status == 0 %} Disabled {% elif permission.status == 1 %} Active {% else %} Suspended {% endif %}
+                                    </span>
+                                </td>
+                                <td class="actions">
+                                    <a href="{{ url('system.permission.edit', '')}}?id={{ permission.id }}" class="on-default edit-row" data-toggle="tooltip" data-placement="top"
+                                        title="" data-original-title="Click Edit">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="{{ url('system.permission.del' , '')}}?id={{ permission.id }}" class="on-default remove-row" data-toggle="tooltip" data-placement="top"
+                                        title="" data-original-title="Click Delete">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            {% include "../../paginate.html" %}
+        </div>
+        <!-- end row -->
+
+    </div>
+    <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}

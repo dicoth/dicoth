@@ -1,0 +1,51 @@
+<link href="/css/topics.min.css" rel="stylesheet">
+{% include "../header.html" %}
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="clearfix top">
+                {{ paginateHtml }}
+                <div class="pull-right"><a class="new-topic" href="/thread/create?forumId={{ forum.id }}">+ Publish new thread</a></div>
+            </div>
+            <div class="topics topics-index card">
+                <div class="card-body item-list">
+                    {% for thread in threads %}
+                    <div class="topic media theme-{{ thread.id }}">
+                        <div class="avatar">
+                            <a title="{{ thread.title }}" href="/thread/{{ thread.id }}">
+                            {% if thread.user.avatar != "" %}
+                                <img class="media-object avatar-48" src="{{ thread.user.avatar }}"></a>
+                            {% else %}
+                            <img class="media-object avatar-48" src="/images/medium-default-avatar.png"></a>
+                            {% endif %}
+                        </div>
+                        <div class="infos media-body">
+                            <div class="title media-heading"><a title="{{ thread.title }}" href="/thread/{{ thread.id }}"><span
+                                    class="node">{{ forum.name }}</span> {{ thread.title }}</a></div>
+                            <div class="info"><a class="user-name" data-name="{{ thread.user.nickname }}" href="/user/{{ thread.uid }}">{{ thread.user.nickname }}</a> <span
+                                    class="hidden-mobile">• Last replied by <a class="user-name" data-name="heroyct" href="/user/{{ thread.last_uid }}">{{ thread.last_user.nickname }}</a> at <time
+                                    class="timeago" datetime='{{ date("Y-m-d H:i:s", thread.last_time) }}'>{{ date("Ymd", thread.last_time) }}</time></span></div>
+                        </div>
+                        <div class="count media-right"><a class="state-false" href="/thread/{{ thread.id }}">{{ thread.posts }}</a></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="clearfix">
+                {{ paginateHtml }}
+            </div>
+        </div>
+        <div class="sidebar col-md-3">
+            <div class="card">
+                <div class="card-header">Rules</div>
+                <div class="card-body"><p>In order to improve the quality of the forum and prevent new registered users from contacting dlang's problems when they post questions, new users need to meet the following conditions before posting.</p>
+                    <ol style="color:#ad2b2d;">
+                        <li>No limits；</li>
+                    </ol>
+                    <p>Please browse more in the new stage to see how other old users share and solve problems in the forum.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "../footer.html" %}

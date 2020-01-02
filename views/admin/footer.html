@@ -1,0 +1,48 @@
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                2016 - 2018 © HuntCMS - huntframework.com
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- End Footer -->
+
+<!-- jQuery  -->
+<script src="/common/jquery/jquery-3.3.1.min.js"></script>
+<script src="/admin/js/popper.min.js"></script>
+<script src="/admin/js/waves.js"></script>
+<script src="/admin/js/jquery.slimscroll.js"></script>
+<script src="/admin/js/jquery.scrollTo.min.js"></script>
+
+<script src="/admin/js/jqueryui.js"></script>
+<script src="/admin/js/index.js"></script>
+<script src="/admin/js/selectize.js"></script>
+
+<!-- bootstrap -->
+<script src="/common/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- App js -->
+<script src="/admin/js/jquery.core.js"></script>
+<script src="/admin/js/jquery.app.js"></script>
+
+
+
+<script>
+    $(function () {
+            $(".price").each(function () {
+                console.log($(this).prop("nodeName"));
+                if($(this).prop("nodeName") == "INPUT"){
+                    $(this).val(Math.round((parseInt($(this).val())/100)*100)/100);
+                }else{
+                    $(this).text(Math.round((parseInt($(this).text())/100)*100)/100);
+                }
+            });
+    })
+</script>
+</body>
+</html>

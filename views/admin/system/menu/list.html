@@ -1,0 +1,123 @@
+{% include "../../header.html" %}
+{% include "../../navigation.html" %}
+
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+            <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box">
+                            <div class="btn-group pull-right">
+                                <h4 class="page-title">Menus</h4>
+                            </div>
+                            <ol class="breadcrumb hide-phone p-0 m-0">
+                                <li class="breadcrumb-item">
+                                    <a href="#">HuntCMS</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="#">Menus</a>
+                                </li>
+                                <li class="breadcrumb-item active">Menu List</li>
+                            </ol>
+                        </div>
+                    </div>
+            </div>
+        <!-- end page title end breadcrumb -->
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="m-b-30">
+                                <a href="{{ url('system.menu.add', '')}}" id="addToTable" class="btn btn-success waves-effect waves-light">{{ trans("COMMON_SYSTEM_ADD") }} <i class="mdi mdi-plus-circle-outline"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="form-inline m-b-20">
+                        <div class="row">
+                            <div class="col-md-6 text-xs-center">
+                                <div class="form-group">
+                                    <label class="control-label m-r-5">Status</label>
+                                    <select id="demo-foo-filter-status" class="form-control input-sm">
+                                        <option value="">Show all</option>
+                                        <option value="active">Active</option>
+                                        <option value="disabled">{{ trans("COMMON_SYSTEM_DISABLED") }}</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-center text-right">
+                                <div class="form-group float-right">
+                                    <input id="demo-foo-search" type="text" placeholder="Search" class="form-control" autocomplete="on">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <table class="table table-striped add-edit-table" id="datatable-editable">
+                        <thead>
+                        <tr>
+                            <th data-toggle="true">{{ trans("MENU_SYSTEM_ID") }}</th>
+                            <th data-toggle="true">{{ trans("MENU_SYSTEM_NAME") }}</th>
+                            <th data-hide="phone">{{ trans("MENU_SYSTEM_ISACTION") }}</th>
+                            <th data-hide="phone">{{ trans("MENU_SYSTEM_MCA") }}</th>
+                            <th data-hide="phone">{{ trans("MENU_SYSTEM_LINKURL") }}</th>
+                            <th data-hide="phone, tablet">{{ trans("MENU_SYSTEM_CREATED") }}</th>
+                            <th data-hide="phone, tablet">{{ trans("MENU_SYSTEM_UPDATED") }}</th>
+                            <th data-hide="phone, tablet">{{ trans("MENU_SYSTEM_STATUS") }}</th>
+                            <th data-hide="phone, tablet">{{ trans("MENU_SYSTEM_OPERATE") }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for menu in menus %}
+                                <tr>
+                                    <td>{{ menu.id }}</td>
+                                    <td>{{ menu.name }}</td>
+                                    <td>{{ menu.isAction }}</td>
+                                    <td>{{ menu.mca }}</td>
+                                    <td>{{ menu.linkUrl }}</td>
+                                    <td>{{ date('Y-m-d H:i:s',menu.created) }}</td>
+                                    <td>{{ date('Y-m-d H:i:s',menu.updated) }}</td>
+                                    <td>
+                                        {% if menu.status == 0 %}
+                                        <span class="badge label-table badge-danger"> Disabled </span>
+                                        {% elif menu.status == 1 %}
+                                        <span class="badge label-table badge-success"> Active </span>
+                                        {% else %}
+                                        <span class="badge label-table badge-warning"> Suspended </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="actions">
+                                        <a href="{{ url('system.menu.edit', '')}}?id={{ menu.id }}" class="on-default edit-row" data-toggle="tooltip" data-placement="top" title="" data-original-title="Click Edit"><i class="fa fa-pencil"></i></a>
+                                        <a href="{{ url('system.menu.del', '')}}?id={{ menu.id }}" class="on-default remove-row" data-toggle="tooltip" data-placement="top" title="" data-original-title="Click Delete"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                            <td colspan="5">
+                                <div class="text-right">
+                                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10 m-b-0"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            {% include "../../paginate.html" %}
+        </div>
+        <!-- end row -->
+
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}

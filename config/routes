@@ -1,0 +1,37 @@
+#
+# method    path                      module.controller.action
+#
+
+GET         /                            forum.forum.list
+GET         /forum/{id<[0-9]+>}          forum.forum.forum
+GET         /search                      forum.thread.search
+
+GET         /thread/{id<[0-9]+>}         forum.thread.thread
+
+*           /thread/create               forum.thread.create
+POST        /thread/reply                forum.thread.reply
+GET         /post/{id<[0-9]+>}/edit      forum.thread.edit
+POST        /thread/edit                 forum.thread.edit
+
+
+*           /register                    user.user.register
+*           /login                       user.user.login
+
+*           /settings                    user.user.settings
+POST        /settings/editprofile        user.user.editProfile
+POST        /settings/editpassword       user.user.editPassword
+
+GET         /logout                      user.user.logout
+GET         /user/{id<[0-9]+>}           user.user.profile
+
+POST        /attachment/upload           attachment.attachment.upload
+POST        /attachment/delete           attachment.attachment.deleteFile
+GET         /attachment/{id<[0-9]+>}     attachment.attachment.file
+
+GET         /captcha                     user.user.getCaptcha
+*           /sendcode                    user.user.sendCode
+*           /checkcode                   user.user.checkCode
+
+GET         /oauth/github                user.user.oauth
+GET         /user/oauthlogin             user.user.oauthLogin
+POST        /user/oauthlogin             user.user.oauthLogin

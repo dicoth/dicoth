@@ -1,0 +1,108 @@
+{% include "./header.html" %}
+<link href="/css/register.min.css" rel="stylesheet">
+<style>
+    #send-mail{
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        text-align: center;
+        line-height: 19px;
+        padding: 10px;
+        margin-left: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">Register</div>
+                <div class="card-body">
+                    {% if regaccount == "" %}
+                    <form class="new_user" id="send-mail-form" action="{{url("user.user.checkCode", "")}}" accept-charset="UTF-8" data-remote="true" method="POST">
+                        <input name="utf8" type="hidden" value="&#x2713;">
+                        <div class="form-group">
+                            <input class="form-control input-lg" placeholder="Please enter your E-mail" required hint="" type="text" name="account" id="user-account">
+                        </div>
+                        <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control input-lg" placeholder="Validation Code" required
+                                                                name="code" type="text" autocorrect="off"
+                                                                autocapitalize="off" pattern="[a-zA-Z0-9]*" maxlength="8"
+                                                                autocomplete="off"> 
+                                    <span id="send-mail" class="input-group-addon input-group-captcha">
+                                        Send validation code
+                                    </span>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" id="next-form" value="Next" class="btn btn-lg btn-primary" data-disable-with="">
+                        </div>
+                    </form>
+                    {% else %}
+                    <form class="new_user" id="new_user" action="{{url("user.user.register", "")}}" accept-charset="UTF-8" data-remote="true"
+                          method="post"><input name="utf8" type="hidden" value="&#x2713;">
+                        <div class="form-group">
+                        <input class="form-control input-lg" placeholder="Username（6~40 characters）"
+                                                       hint="Be careful, your username cannot be changed after your registration" type="text" name="username"
+                                                       id="user_login"></div>
+                        <div class="form-group"><input class="form-control input-lg" placeholder="Name" type="text"
+                                                       name="nickname" id="user_name" ></div>
+                        <div class="form-group"><input class="form-control input-lg" placeholder="Password（8~32 characters）" type="password"
+                                                       name="password" id="user_password"></div>
+                        <div class="form-group"><input class="form-control input-lg" placeholder="Confirm password（8~32 characters）" type="password"
+                                                       name="rpassword"
+                                                       id="user_password_confirmation"></div>
+                        <div class="form-group">
+                            <div class="input-group"><input class="form-control input-lg" placeholder="Validation code"
+                                                            name="captcha" type="text" autocorrect="off"
+                                                            autocapitalize="off" pattern="[a-zA-Z]*" maxlength="5"
+                                                            autocomplete="off"> <span
+                                        class="input-group-addon input-group-captcha"><a class="rucaptcha-image-box"
+                                                                                         href="javascript:void(0)"><img
+                                                class="rucaptcha-image"
+                                                src="{{url("user.user.getCaptcha", "")}}"></a></span></div>
+                        </div>
+                        <div class="form-group"><input type="submit" name="commit" value="Register"
+                                                       class="btn btn-lg btn-primary" data-disable-with="Submitting"></div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+{% include "./footer.html" %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        $(".rucaptcha-image-box").on("click", function() {
+             $(this).children("img").attr("src", "{{url("user.user.getCaptcha", "")}}?rnd="+Math.random());
+        });
+        $("#send-mail").click(function(){
+            var account = $("#user-account").val();
+            if(account == ""){
+                alert("Please enter your E-mail address");
+                return ;
+            }
+            $.ajax({
+                url : '/sendcode',
+                data : {
+                    account:account,
+                },
+                type : 'POST', 
+                success : function(data) {
+                    if(data != "ok")
+                    {
+                        alert(data);
+                    }else{                        
+                        alert('Sent successed');
+                    }
+                }
+            });
+        })
+    });
+
+</script>

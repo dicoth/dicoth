@@ -1,0 +1,168 @@
+{% include "../header.html" %}
+<link href="/css/topicDetailNew.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/uploader/main.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css">
+
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="topic-detail card"> 
+                <div class="card-header media clearfix">
+                    <div class="media-body"><h1 class="media-heading"><a class="node" href="/forum/{{ thread.forum.id }}">{{ thread.forum.name }}</a>
+                        <span class="title">{{ thread_info.title }}</span></h1>
+                        <div class="info"><a data-author="true" class="user-name" data-name="{{ thread.user.nickname }}" href="/user/{{ thread_info.uid }}">{{ thread.user.nickname }}</a>
+                            <span class="hidden-mobile"></span>· Created <time class="timeago"
+                                                                       datetime="{{ date('Y-m-d H:i:s', thread.created) }}">{{ date("Y-m-d", thread.created) }}</time>
+                            <span class="hidden-mobile">· Last modified by <a class="user-name" data-name="{{ thread.last_user.nickname }}" href="/user/{{ thread.last_uid }}">{{ thread.last_user.nickname }}</a> replied at <time
+                                    class="timeago" datetime="{{ date('Y-m-d H:i:s', thread.last_time) }}">{{ date("Y-m-d H:i:s", thread.last_time) }}</time> </span>· {{ thread.views }} times read
+                        </div>
+                    </div>
+                    <div class="avatar media-right"><a title="{{ thread_user_info.nickname }}" href="/user/{{ thread_info.uid }}">
+                        {% if thread_user_info.avatar != "" %}
+                        <img class="media-object avatar-48" src="{{ thread_user_info.avatar }}"></a>
+                        {% else %}
+                        <img class="media-object avatar-48" src="/images/medium-default-avatar.png"></a>
+                        {% endif %}
+                        </a></div>
+                </div>
+            </div>
+
+            <div id="replies" class="card" data-last-floor="40">
+                <div class="items card-body">
+                    {% for p in post %}
+                        <div class="reply" data-id="{{ p.id }}" id="reply{{ p.id }}">
+                            <div id="reply-{{ p.id }}" data-floor="{{ idx_star }}">
+                                <div class="avatar"><a title="{{ p.user.nickname }}" href="/user/{{ p.user.id }}">
+                                    {% if p.user.avatar != "" %}
+                                        <img class="media-object avatar-48" src="{{ p.user.avatar }}"></a>
+                                    {% else %}
+                                        <img class="media-object avatar-48" src="/images/medium-default-avatar.png"></a>
+                                    {% endif %}
+                                </div>
+                                <div class="infos vditor-reset" style="min-height: 100px">
+                                    <div class="info">
+                                        <span class="name"> 
+                                            <a class="user-name" data-name="{{ p.user.nickname }}" href="/user/{{ p.user.id }}">{% if p.user.nickname != "" %}{{ p.user.nickname }}{% else %}Anonymous{% endif %}</a>
+                                        </span>
+                                        <span class="sub-info">
+                                            <span class="floor">#{{ idx_star }}</span> · 
+                                            <a class="time" href="#reply-{{ p.id }}">
+                                                <time class="timeago" datetime="{{ date('Y-m-d H:i:s', p.created) }}">{{ date("Y-m-d", p.created) }}
+                                                </time>
+                                            </a>
+                                        </span>
+                                        {% if p.user.id == uid %}
+                                            <span class="sub-edit">
+                                                    <span class="floor"></span> · 
+                                                    <a class="time" href="/post/{{p.id}}/edit">
+                                                    Edit
+                                                    </a>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="markdown">{{ p.content_html }}</div>
+                                </div>
+                            </div>
+                            <div class="card-footer clearfix">
+                                <div class="opts">
+                                    {% for attachment in attachments %}
+                                        {% if attachment.item_id == p.id %}
+                                        <a title="{{ attachment.original_name }}" class="likeable deactive" href="/attachment/{{ attachment.id }}" target="_blank"><span> <i class="fa fa-paperclip m-r-10 m-b-10"></i>{{ attachment.original_name }}</span></a>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="pull-right opts"></span>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    {% set idx_star = idx_star+1 %}
+                    {% endfor %}
+                </div>
+                <div class="clearfix">
+                    {{ paginateHtml }}
+                </div>
+            </div>
+            {% if session_user %}
+            <div id="reply" class="card">
+                <div class="card-header hide-ios">Reply</div>
+                <div class="card-body">
+                    <form id="form-post" action="/thread/reply" method="post">
+                        <input type="hidden" name="id" value="{{ threadid }}">
+                        <input id="img-input" type="hidden" name="attachment" value=""/>
+                        <input id="content" type="hidden" name="content" value="" />
+                        <div id="vditor" style="min-height: 400px;"></div>
+                        <div id="uploader"></div>
+
+                        <div class="submit-buttons">
+                            <button type="" id="post-button" class="btn btn-primary" tabindex="2"
+                                    data-disable-with="Publish">Publish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div id="reply" class="card">
+                <div class="card-header hide-ios">Login to reply</div>
+            </div>
+            {% endif %}
+           
+        </div>
+    </div>
+</div>
+
+{% include "../footer.html" %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/d.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="/vendor/uploader/static.js" defer></script>
+<script src="/vendor/uploader/easyUploader.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@latest/dist/index.classic.css" />
+<script src="https://cdn.jsdelivr.net/npm/vditor@1.10.11/dist/index.min.js"></script>
+<script>   
+    $(function(){
+        vditor.disabledCache();
+    
+    })
+
+    $("#post-button").click(function () {
+        var content = vditor.getValue();
+        $("#content").val(content);
+        if(content.length < 2)
+        {
+            alert("Content cannot be empty");
+            return false;
+        }
+        vditor.clearCache();
+    });
+
+    var uploader = easyUploader({
+        id: "uploader",
+        accept: '.jpg,.png,.doc,.docx,.gif,.json',
+        action: '/attachment/upload',
+        dataFormat: 'formData',
+        maxCount: 20,
+        maxSize: 8,
+        multiple: true,
+        data: null,
+        beforeUpload: function (file, data, args) {
+            data.base = file.base;
+            data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT';
+            data.otherKey = 'otherValue';
+        },
+        onChange: function (fileList) {
+            
+        },
+        onRemove: function (removedFiles, files) {
+        },
+        onSuccess: function (res) {
+        },
+        onError: function (err) {
+            console.log('onError', err);
+        },
+    });
+</script>
+{% include "../islogin.html" %}

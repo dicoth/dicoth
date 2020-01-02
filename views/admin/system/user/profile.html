@@ -1,0 +1,67 @@
+{% include "../../header.html" %}
+{% include "../../navigation.html" %}
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <h4 class="page-title">Profile</h4>
+                    </div>
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">HuntCMS</a></li>
+                        <li class="breadcrumb-item"><a href="#">Extras</a></li>
+                        <li class="breadcrumb-item active">Profile</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-xl-5">
+                <div class="">
+                    <div class="card-box">  
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="settings">
+                                <form role="form" method="post">
+                                    <div class="form-group">
+                                        <label for="Email">Email(Account)</label>
+                                        <input type="email" disabled value="{{user.email}}" id="Email" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="FullName">Name</label>
+                                        <input type="text" name="name" value="{{user.name}}" required data-parsley-maxlength="12" id="FullName" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Password">Password</label>
+                                        <input type="password" name="password" placeholder="6 - 32 Characters" data-parsley-minlength="6" data-parsley-maxlength="12" id="Password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="RePassword">Re-Password</label>
+                                        <input type="password" name="rpassword" placeholder="6 - 32 Characters" data-parsley-minlength="6" data-parsley-maxlength="12" id="RePassword" class="form-control">
+                                    </div>
+                                    <button class="btn btn-primary waves-effect waves-light w-md" type="submit">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
+{% include "../../footer.html" %}
+<script type="text/javascript" src="/assets/vendor/parsleyjs/dist/parsley.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('form').parsley();
+
+
+    });
+</script>

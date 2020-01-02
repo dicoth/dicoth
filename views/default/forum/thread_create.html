@@ -1,0 +1,120 @@
+{% include "../header.html" %}
+<link href="/css/topicDetailNew.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/uploader/main.css">
+<link rel="stylesheet" href="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+<link rel="stylesheet" href="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput-typeahead.css">
+
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="reply" class="card">
+                <div class="card-header hide-ios">Publish new thread</div>
+                <div class="card-body">
+                    <form id="form-post" action="/thread/create?forumId={{forumId}}" method="post">
+                    <div class="form-group row">
+                        <label class="col-1 col-form-label">Title</label>
+                        <div class="col-10">
+                            <input type="text" name="title" class="form-control" placeholder="Title">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-1 col-form-label">Key words</label>
+                        <div class="col-10">
+                            <input type="text" name="keywords" value="" data-role="tagsinput" placeholder="Type 'Enter Key' to seperate keywords" style="width: 100%"/>
+                        </div>
+                    </div>
+                        <input id="img-input" type="hidden" value=""/>
+                        <div id="vditor" style="min-height: 400px;"></div>
+                        <div id="uploader"></div>
+                        <div class="submit-buttons">
+                            <button type="button" id="post-button" class="btn btn-primary" tabindex="2"
+                                    data-disable-with="Publish">Publish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "../footer.html" %}
+
+<script src="/vendor/uploader/static.js" defer></script>
+<script src="/vendor/uploader/easyUploader.js"></script>
+<script src="/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@latest/dist/index.classic.css" />
+<script src="https://cdn.jsdelivr.net/npm/vditor@1.10.11/dist/index.min.js"></script>
+
+
+
+<script>
+    $(function(){
+        vditor.disabledCache();
+        vditor.focus();
+        vditor.setValue('');
+    })
+    $("#post-button").click(function () {
+        var content = vditor.getValue();
+        var forum_id = $("select[name=forum_id]").val();
+        var title = $("input[name=title]").val();
+        var keywords = $("input[name=keywords]").val();
+        if(title.length > 64 ){
+            alert("The length of title cannot over 64 words");
+            return;
+        }
+        if(content == "")
+        {
+            alert("Content cannot be empty");
+            return;
+        }
+        $.ajax({
+            url : '/thread/create?forumId={{forumId}}',
+            data : {
+                forum_id:forum_id,
+                title:title,
+                content:content,
+                keywords:keywords
+            },
+            type : 'POST',  
+            success : function(data) {
+                if(data != "" && isNaN(data))
+                {
+                    alert(data);
+                }else{
+                    vditor.clearCache();
+                    window.location.href = "/thread/"+data;
+                }
+            }
+        });
+    });
+    var uploader = easyUploader({
+        id: "uploader",
+        accept: '.jpg,.png,.doc,.docx,.gif,.json',
+        action: '/attachment/upload',
+        dataFormat: 'formData',
+        maxCount: 20,
+        maxSize: 8,
+        multiple: true,
+        data: null,
+        beforeUpload: function (file, data, args) {    
+            data.base = file.base;
+            data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT';
+            data.otherKey = 'otherValue';
+        },
+        onChange: function (fileList) {
+            
+        },
+        onRemove: function (removedFiles, files) {
+        },
+        onSuccess: function (res) {
+
+        },
+        onError: function (err) {
+            console.log('onError', err);
+        },
+    });
+    
+
+</script>

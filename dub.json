@@ -1,0 +1,15 @@
+{
+    "name": "dicoth",
+    "description": "An open source forum system written in D Programming Language, based on Hunt Framework.",
+    "copyright": "Copyright © 2019, dicoth.com",
+    "homepage": "http://www.dicoth.com",
+    "license": "Apache-2.0",
+    "targetType": "executable",
+    "dependencies": {
+        "hunt-shiro": "~>1.0.0",
+        "hunt-redis":"~>1.1.0",
+        "hunt-framework": "~>2.2.5",
+        "hunt-markdown" : "~>1.0.5",
+        "hunt-jwt": "~>0.1.0-beta.1"
+    }
+}

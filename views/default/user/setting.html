@@ -1,0 +1,241 @@
+{% include "../header.html" %}
+<link href="/css/topicDetailNew.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/uploader/main.css">
+<style>
+#file{
+   visibility: hidden;
+}
+#change-avter,#change-avatar-submit{
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    border: solid 1px #007bff;
+}
+.change-avatar-container{
+    text-align: center;
+}
+.test:after{clear:both;display:block;height:0;content:""}.test>div{float:left}.t2{width:100px;height:50px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.t3{font-size:100px}.card-right{display:none}.card-right#setting{display:block}
+</style>
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-sm-2 col-md-offset-1 setting-menu">
+            <div class="card">
+                <ul class="nav nav-pills flex-column nav-stacked">
+                    <li class="nav-item" itemid="setting">
+                        <a class="nav-link active" href="javascript:void(0)">
+                            <i class="fa fa-user-circle"></i>
+                            <span>Basic Info</span>
+                        </a>
+                    </li>
+                   
+                    <li class="nav-item" itemid="password">
+                        <a class="nav-link hide-ios" href="javascript:void(0)">
+                            <i class="fa fa-keyboard-o"></i> 
+                            <span>Password</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="card card-right" id="setting">
+                <div class="card-body">
+                    <form class="edit_user" enctype="multipart/form-data"
+                        action="/setting" accept-charset="UTF-8"
+                        method="post"><input name="utf8" type="hidden"
+                            value="&#x2713;"> <input type="hidden"
+                            name="_method"
+                            value="put"> <input
+                            type="hidden" name="authenticity_token"
+                            value="5jprRAttIGSdHGE3GhzrVeO/hgUjDcPaAm+SNnwBiWmj8+ak0HhjIaII6L4578obMOD7r1bdX9al2q1l9PnjXg==">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <div class="form-group"><label
+                                        class="control-label">Username</label>
+                                        <input 
+                                        disabled="disabled"
+                                        style="width: 200px"
+                                        class="form-control" placeholder="Username"
+                                        type="text"
+                                        value="{{userInfo.username}}" name="username"
+                                        id="user_name"></div>
+                                <div class="form-group"><label
+                                            class="control-label">Nickname</label>
+                                            <input 
+                                            style="width: 200px"
+                                            class="form-control" placeholder="Nickname"
+                                            type="text"
+                                            value="{{userInfo.nickname}}" name="nickname"
+                                            id="nick_name"></div>
+                                <div class="form-group"><label
+                                        class="control-label">Email</label>
+                                    <input
+                                        class="form-control"
+                                        disabled="disabled"
+                                        placeholder="Email" type="text"
+                                        value="{{userInfo.email}}"
+                                        name="email" id="user_email"></div>
+                            
+                                <div class="form-group">
+                                    <label class="control-label">Profile</label>
+                                    <textarea
+                                        class="form-control" name="introduce" placeholder="Profile"
+                                        id="user_introduce">{{userInfo.introduce}}
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 change-avatar-container">
+                                
+                                    <div class="form-group avatar-preview" style="text-align: center;">
+                                        {% if userInfo.avatar %}
+                                            <img class="media-object avatar-96" src="{{userInfo.avatar}}">
+                                        {% else %}
+                                            <img class="media-object avatar-96" src="/images/medium-default-avatar.png">
+                                        {% endif %}
+                                    </div>
+                                    <button id="change-avter">avatar</button>
+                                    <input id="file" type="file" name="file"/>
+                                </div>
+                        </div>
+                        <div class="form-actions hide-ios">
+                            <button id="edit_profile" type="submit" class="btn btn-primary"
+                                data-disable-with="saving">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        
+            
+            <div class="card card-right" id="password">
+                <div class="card-body">
+                    <form class="edit_user" id="asd" action="/setting"
+                        accept-charset="UTF-8" method="post">
+                        <!-- <input type="hidden" name="by" value="password"> -->
+                        <div class="form-group"><label
+                                for="user_current_password">Old Password</label> <input
+                                class="form-control" type="password"
+                                name="current_password" id="current_password" required></div>
+                        <div class="form-group"><label for="password_new">New Password</label>
+                            <input class="form-control"
+                                type="password"
+                                name="password_new"
+                                id="password_new" required></div>
+                        <div class="form-group"><label
+                                for="user_password_confirmation">Confirm Password</label>
+                            <input
+                                class="form-control" type="password"
+                                name="user_password_confirmation"
+                                id="user_password_confirmation" required></div>
+                        <div class="form-actions hide-ios">
+                            <input type="submit"
+                                id=save_password
+                                name="commit" value="Change Password"
+                                class="btn btn-primary"
+                                data-disable-with="saving">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+{% include "../footer.html" %}
+
+<script src="/vendor/uploader/easyUploader.js"></script> 
+<script>
+        $("#main .nav-pills .nav-item").click(function(){
+            var itemid = $(this).attr("itemid");
+           
+            $("#main .card .nav-link").removeClass("active");
+            $(this).find("a.nav-link").addClass("active");
+
+            $("#main .card-right").css("display","none");
+            $("#"+itemid).css("display","block");
+
+        })
+        function editProfile(){
+            
+            $("#edit_profile").click(function(){
+                var param = {};
+                param.nickname = $("#nick_name").val();
+                param.email = $("#user_email").val();
+                param.introduce = $("#user_introduce").val();
+                param.avatar = $(".avatar-preview img").attr('src');
+                $.ajax({
+                    url:"/settings/editprofile",
+                    data:param,
+                    method:"POST",
+                    success:function(result){
+                        if(result == "1"){
+                            alert("Successed")
+                        }else{
+                            alert(result);
+                        }
+                    }
+                });
+                return false;
+            })
+            
+        }
+        function modifyPassword(){
+            $("#save_password").click(function(){
+                var param = {};
+                param.current_password = $("#current_password").val();
+                param.password = $("#password_new").val();
+                param.user_password_confirmation = $("#user_password_confirmation").val();
+                if(param.password.length<6){
+                    alert("Password must be at least 6 characters");
+                    return false;
+                }
+                if(param.user_password_confirmation.length<6){
+                    alert("The confirmed password must be at least 6 characters");
+                    return false;
+                }
+                $.ajax({
+                    url:"/settings/editpassword",
+                    data:param,
+                    method:"POST",
+                    success:function(result){
+                        if(result == "1"){
+                            alert("Successed, please log in again");
+                            window.location.href = "/login";
+                        }else{
+                            alert(result);
+                        }
+                    }
+                });
+                return false;
+            })
+        }
+        
+        function upload() {
+            var formData = new FormData();
+            formData.append("file",$("#file")[0].files[0]);
+            $.ajax({
+                url: "/attachment/upload?type=avatar",
+                type: 'POST',
+                data: formData,
+                dataType:"json",
+                processData: false,
+                contentType:false,
+                success : function(data) {
+                        $(".avatar-preview img").attr('src',data.url);       
+                }
+            });
+        }
+        $("#file").change(function(){
+            upload();
+        })
+
+        $("#change-avter").click(function(){
+            $("#file").click();
+            return false;
+        })
+
+        editProfile();
+        modifyPassword();
+</script>

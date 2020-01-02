@@ -1,0 +1,70 @@
+{% include "../header.html" %}
+<link href="/css/index.min.css" rel="stylesheet">
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-md-9">
+            {% for p in forums %}
+                {% if p.pid == 0 %}
+                    <div class="topics card">
+                        <div class="card-header">{{ p.name }}</div>
+                        <div class="card-body item-list">
+                            {% for forum in forums %}
+                                {% if p.id == forum.pid %}
+                                    <div class="topic row">
+                                        <div class="media col-md-8">
+                                            <div class="ipsItemStatus-icon">
+                                                <a href="/forum/{{ forum.id }}">
+                                                    <img class="media-object avatar-48" src="{{ forum.icon }}">
+                                                </a>
+                                            </div>
+                                            <div class="infos media-body"><h5 class="title"><a href="/forum/{{ forum.id }}">{{ forum.name }}</a>
+                                            </h5>
+                                                <div class="info">{{ forum.description }}</div>
+                                            </div>
+                                            <div class="count media-right ipsDataItem_stats"><a class="ipsDataItem_statssber" href="/forum/{{ forum.id }}">{{ forum.threads }}</a>
+                                                <a href="/forum/{{ forum.id }}" class="ipsDataItem_stats_type">{{ forum.threads }} thread</a></div>
+                                        </div>
+                                        {% for thread in threads %}
+                                            {% if thread.forum_id == forum.id %}
+                                                <div class="media col-md-4 sidebar">
+                                                    <div class="avatar"><a href="/user/{{ thread.last_uid }}" title="{{ thread.user.nickname }}" ><img class="media-object avatar-38" src='{% if thread.user.avatar != "" %}{{thread.user.avatar}}{% else %}/images/medium-default-avatar.png{% endif %}'></a>
+                                                    </div>
+                                                    <div class="infos media-body">
+                                                        <div class="title media-heading"><a href="/thread/{{ thread.id }}">{{ thread.title }}</a></div>
+                                                        <span class="info"><span class="hidden-mobile"><time class="timeago" datetime="{{ date('Y-m-d H:i', thread.last_time) }}">{{ date("Y-m-d", thread.last_time) }}</time></span>
+                                                            by <a href="/user/{{thread.user.id}}">{% if thread.user.nickname != "" %}{{thread.user.nickname}}{% else %}Anonymous{% endif %}</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="sidebar col-md-3 hot-right">
+            <div class="topics card">
+                <div class="card-header">Hot threads</div>
+                <div class="card-body item-list">
+                    {% for thread in hotThreads %}
+                        <div class="topic media">
+                            <div class="avatar"><a title="{{ thread.user.nickname }}" href="/user/{{ thread.uid }}"><img class="media-object avatar-38"
+                                                                         src='{% if thread.user.avatar != "" %}{{thread.user.avatar}}{% else %}/images/medium-default-avatar.png{% endif %}'></a>
+                            </div>
+                            <div class="infos media-body">
+                                <div class="title media-heading"><a title="{{ thread.title }}" href="/thread/{{ thread.id }}">{{ thread.title }}</a></div>
+                                <div class="info"><span class="hidden-mobile">by</span> <span class="hidden-mobile">{% if thread.user.nickname != "" %}{{thread.user.nickname}}{% else %}Anonymous{% endif %}</span>
+                                    <time class="hidden-mobile timeago" datetime='{{ date("Y-m-d H:i:s", thread.created) }}'>{{ date("Y-m-d H:i:s", thread.created) }}</time></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "../footer.html" %}

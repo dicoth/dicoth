@@ -1,0 +1,62 @@
+{% include "../header.html" %}
+<style>
+    ul{
+        padding: 0px;
+    }
+    li{
+        list-style: none;
+        color: red;
+    }
+</style>
+<link href="/css/login.min.css" rel="stylesheet">
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">Login</div>
+                <div class="card-body">
+                    <form class="new_user" id="new_user" action="{{ationurl}}" accept-charset="UTF-8" data-remote="true" method="post">
+                        <input name="utf8" type="hidden" value="&#x2713;">
+                        <div class="form-group">
+                            <ul>
+                                {% if errors %}
+                                    {% for error in errors %}
+                                    <li>{{ error[0] }}:{{ error[1] }}</li>
+                                    {% endfor %}    
+                                {% endif %}                            
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control input-lg" placeholder="Username / Email" type="text" name="username" value="{{ username }}" id="user_login">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control input-lg" placeholder="Password" name="password" id="user_password">
+                        </div>
+                        <div class="form-group from-check">
+                            <label class="form-check-label" for="user_remember_me">
+                                <input type="checkbox" value="1" name="remember_me" id="user_remember_me" checked>
+                                Remember login status（30 days）
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <input type="submit" name="commit" value="Login" class="btn btn-primary btn-lg btn-block" data-disable-with="login">
+                        </div>
+                        <div class="card">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a class="btn btn-default btn-lg btn-block" href="https://github.com/login/oauth/authorize?client_id={{ client_id }}"><i class="fa fa-github"></i> GitHub</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+{% include "../footer.html" %}
+<script type="text/javascript" src="/js/login.min.js"></script>

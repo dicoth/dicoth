@@ -1,0 +1,143 @@
+{% include "../header.html" %}
+<link href="/css/topicDetailNew.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/vendor/uploader/main.css">
+<div id="main" class="main-container container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="reply" class="card">
+                <div class="card-header hide-ios">Edit</div>
+                <div class="card-body">
+                    <form id="form-post" action="" method="post">
+                    {% if owner == 1 %}
+                        <div class="form-group row">
+                            <div class="col-10">
+                                <select class="form-control" name="forum_id">
+                                    {% for forum in forums %}
+                                        {% if forum.pid > 0 %}
+                                    <option value="{{ forum.id }}"{% if forum.id == forumId %} selected{% endif %}>{{ forum.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+    
+                    <input type="hidden" name="postid" class="form-control" placeholder="Enter title" value="{{post.id}}">
+                        <input id="img-input" type="hidden" name="attachment_ids" value=""/>
+                        <input id="content_str" type="hidden" name="content" value='{{post.content}}'>
+                        <div id="vditor" style="min-height: 400px;"></div>
+                        <div>Attachments：        
+                                {% for attachment in attachments %}                            
+                                    <a title="{{ attachment.original_name }}" class="likeable deactive" href="/attachment/{{ attachment.id }}" target="_blank"><span> <i class="fa fa-paperclip m-r-10 m-b-10"></i>{{ attachment.original_name }}</span></a>&nbsp;&nbsp;<a title="remove_attachment" id={{ attachment.id }}  class="remove_attachment" href="javascript:;">Remove</a>
+                                {% endfor %}
+                        </div>
+                        <div id="uploader"></div>
+                        <div class="submit-buttons">
+                        <button type="button" id="post-button" class="btn btn-primary" tabindex="2"
+                                data-disable-with="Submit">Submit
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "../footer.html" %}
+
+<script src="/vendor/uploader/static.js" defer></script>
+<script src="/vendor/uploader/easyUploader.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@latest/dist/index.classic.css" />
+<script src="https://cdn.jsdelivr.net/npm/vditor@1.10.11/dist/index.min.js"></script>
+
+<script>
+    $(function(){
+        vditor.disabledCache();
+        vditor.focus();
+        vditor.setValue($("#content_str").val());
+    })
+    
+
+    $("#post-button").click(function () {
+        var content = vditor.getValue();
+        var postid = $("input[name=postid]").val();
+        var attachment_ids = $("input[name=attachment_ids]").val();
+        var forumid = $("select[name=forum_id]").val();
+        if(content == "")
+        {
+            alert("Content cannot be empty");
+            return;
+        }
+        $.ajax({
+            url : '/thread/edit',
+            data : {
+                postid:postid,
+                content:content,
+                attachment_ids:attachment_ids,
+                forum_id:forumid,
+            },
+            type : 'POST',  
+            success : function(data) {
+                if(data != "" && isNaN(data))
+                {
+                    alert(data);
+                }else{
+                    vditor.clearCache();
+                    window.location.href = "/thread/"+data;
+                }
+            }
+        });
+        return false;
+    });
+    
+
+
+    var uploader = easyUploader({
+        id: "uploader",
+        accept: '.jpg,.png,.doc,.docx,.gif,.json',
+        action: '/attachment/upload',
+        dataFormat: 'formData',
+        maxCount: 20,
+        maxSize: 8,
+        multiple: true,
+        data: null,
+        beforeUpload: function (file, data, args) {
+            data.base = file.base;
+            data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT';
+            data.otherKey = 'otherValue';
+        },
+        onChange: function (fileList) {
+        
+        },
+        onRemove: function (removedFiles, files) {
+        },
+        onSuccess: function (res) {
+
+        },
+        onError: function (err) {
+            console.log('onError', err);
+        },
+    });
+    $('body').on('click', '.remove_attachment', function(){
+        var id = $(this).attr('id');
+        $.ajax({
+            url : '/attachment/delete',
+            data : {
+                id:id,
+            },
+            type : 'POST', 
+            success : function(data) {
+                if(data.error_code > 0){
+                    alert("Error!");
+                    window.location.reload();                
+                }else{
+                    alert('Success!');
+                    window.location.reload();                
+                }
+                
+            }
+        });
+    });
+    
+</script>

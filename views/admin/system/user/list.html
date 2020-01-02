@@ -1,0 +1,97 @@
+{% include "../../header.html" %}
+{% include "../../navigation.html" %}
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <h4 class="page-title">User</h4>
+                    </div>
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">HuntCMS</a></li>
+                        <li class="breadcrumb-item"><a href="#">User</a></li>
+                        <li class="breadcrumb-item active">User List</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="m-b-30">
+                                <a href="{{ url('system.user.add' , '')}}" id="addToTable"
+                                   class="btn btn-success waves-effect waves-light">Add <i
+                                        class="mdi mdi-plus-circle-outline"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped add-edit-table" id="datatable-editable">
+                        <thead>
+                        <tr>
+                            <th>Nickname</th>
+                            <th>Email</th>
+                            <th>Updated</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <div class="form-inline m-b-20">
+                            <div class="row">
+
+                                <div class="col-md-12 text-xs-center">
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+                        <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{date('Y-m-d H:i:s',user.created)}}</td>
+                            <td>{{date('Y-m-d H:i:s',user.updated)}}</td>
+                            <td>
+                                {% if user.status == 0 %}
+                                <span class="badge label-table badge-danger">{{ trans("COMMON_SYSTEM_DISABLED") }}</span>
+                                {% else %}
+                                <span class="badge label-table badge-success">{{ trans("COMMON_SYSTEM_ENABLED") }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a href="{{ url('system.user.edit' , '')}}?id={{ user.id }}" class="on-default edit-row"
+                                   data-toggle="tooltip" data-placement="top" title="" data-original-title="Click Edit"><i
+                                        class="fa fa-pencil"></i></a>
+                                <a href="{{ url('system.user.del' , '')}}?id={{ user.id }}" class="on-default remove-row"
+                                   data-toggle="tooltip" data-placement="top" title=""
+                                   data-original-title="Click Delete"><i class="fa fa-trash-o"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- end: col -->
+        </div> <!-- end row -->
+        <div class="clearfix">
+            {% include "../../paginate.html" %}
+        </div>
+        <!-- end row -->
+
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}

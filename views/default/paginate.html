@@ -1,0 +1,23 @@
+{% if pageModel.totalPages >= 1 %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination pull-left">
+        <li class="page-item{% if pageModel.current < 2 %} disabled{% endif %}">
+            <a class="page-link" href="?page={{pageModel.previous}}&{{pageQuery}}" tabindex="-1">Previous</a>
+        </li>
+        {% for p in pageModel.pages %}
+            {% if p == 0 %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="...">...</a>
+                </li>
+            {% else %}
+                <li class="page-item{% if pageModel.current == p %} active{% endif %}">
+                    <a class="page-link" href="?page={{p}}&{{pageQuery}}">{{ p }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        <li class="page-item{% if pageModel.totalPages == pageModel.current %} disabled{% endif %}">
+            <a class="page-link" href="?page={{pageModel.next}}&{{pageQuery}}">Next</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}

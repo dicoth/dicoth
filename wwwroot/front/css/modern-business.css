@@ -1,0 +1,135 @@
+/*!
+ * Start Bootstrap - Modern Business (https://startbootstrap.com/template-overviews/modern-business)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-logomodern-business-nav/blob/master/LICENSE)
+ */
+
+body {
+    padding-top: 60px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}
+
+.contents img {
+    max-width: 100%;
+}
+
+.bg-dark {
+    background-color: #333333 !important;
+    border-bottom: 1px #222 solid;
+}
+
+.mt {
+    padding-top: 10vh;
+}
+.breadcrumb-item a {
+    color: #222;
+    text-decoration: none;
+}
+.card-title a{
+    color: #212529;
+    text-decoration: none;
+}
+.navbar {
+    padding: 0;
+}
+
+.carousel-item {
+    /* height: 56vh;
+  min-height: 300px; */
+    height: 55.7vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    background-size: cover;
+}
+
+.portfolio-item {
+    margin-bottom: 30px;
+}
+
+.w-96 {
+    max-width: 96px;
+    width: 96px;
+}
+
+.h-96 {
+    height: 96px;
+    max-height: 96px;
+}
+
+.hunt_logo {
+    height: 50px;
+}
+
+#doc-menu {
+    border-radius: .25rem;
+    border-right: 1px solid rgba(0, 0, 0, .125);
+}
+
+#doc-menu li {
+    padding: 0;
+    line-height: 40px;
+    
+    border: 0;
+    border-radius: 0
+}
+#doc-menu li a{
+    padding-left: 15px;
+}
+#doc-menu .submenu .list-group{
+    display: none;
+
+}
+#doc-menu .list-group-item a {
+    color: rgba(0, 0, 0, 0.65);
+    text-decoration: none;
+}
+#doc-menu .submenu-title {
+    position: relative
+}
+#doc-menu .submenu-title em {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-top-color: #959595;
+    border-bottom: 0px;
+    transform-origin: 50% 20%;
+    transition: all 150ms ease-in-out;
+}
+#doc-menu .active {
+    background-color: unset;
+}
+#doc-menu .active>.list-group {
+    display: block;
+}
+#doc-menu .active>.submenu-title em {
+    border-top-color: #222;
+    transform: rotate(180deg);
+}
+#doc-menu .active>.selected em {
+    border-top-color:#222;
+    transform: rotate(-180deg);
+}
+#doc-menu li.selected {
+    background-color: #e6f7ff;
+    border-right: 3px solid #1890ff;
+}
+#doc-menu .submenu-title.selected {
+    color: #1890ff;
+}
+#doc-menu li li {
+    padding-left: 24px;
+}
+
+#doc-menu a {
+    display: block;
+    height: 40px;
+}

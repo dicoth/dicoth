@@ -1,0 +1,100 @@
+.webuploader-container {
+    position: relative;
+}
+
+.webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+.webuploader-pick {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    background: #0E9AEF;
+    padding: 10px 15px;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.webuploader-pick-hover {
+    background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/*webuploader.css*/
+
+
+
+
+
+
+.file-upload-list{
+    margin: 0;
+    padding: 10px;
+    border: 1px solid black;
+}
+.file-upload-list .file-item{
+    position: relative;
+    vertical-align: top;
+    padding-right: 40px;
+    list-style: none;
+    display: inline-block;
+    width: 33%;
+    margin-bottom: 10px;
+}
+
+.file-upload-list .file-item .file-img{
+    width: 100%;
+}
+.file-upload-list .file-item .file-name{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+.file-upload-list .file-item .file-del{
+    position: absolute;
+    top: 0;
+    right: 40px;
+    width: 40px;
+    background-color: red;
+    height: 100%;
+    display: none;
+}
+.file-upload-list .file-item:hover .file-del{
+    display: block;
+}
+
+
+
+.file-item .progress-striped{
+    position: absolute;
+    bottom: -17px;
+    height: 60px;
+    width: calc(100% - 40px);
+    background-color: #999999;
+}
+.file-item .progress-striped .progress-bar{
+    height: 20px;
+    margin-top: 35px;
+}
+.file-item .progress-striped .state{
+    position: absolute;
+    bottom: 17px;
+    font-size: 14px;
+    color: black;
+    height: 20px;
+}
+.file-item .error{
+    position: absolute;
+    bottom: 0;
+    font-size: 18px;
+}
+

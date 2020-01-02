@@ -1,0 +1,79 @@
+#
+# method    path                                module.controller.action
+#
+
+GET         /                                   system.dashboard.dashboard
+GET         /login                              system.user.login
+POST        /login                              system.user.login
+GET         /logout                             system.user.logout
+
+GET         /forum/list                         forum.forum.list
+GET         /forum/edit                         forum.forum.edit
+POST        /forum/edit                         forum.forum.edit
+GET         /forum/add                          forum.forum.add
+POST        /forum/add                          forum.forum.add
+GET         /forum/del                          forum.forum.del
+GET         /user/list                          user.user.list
+GET         /user/detailed                      user.user.detailed
+GET         /system/users                       system.user.list
+GET         /system/user/add                    system.user.add
+POST        /system/user/add                    system.user.add
+GET         /system/user/edit                   system.user.edit
+POST        /system/user/edit                   system.user.edit
+GET         /system/user/del                    system.user.del
+GET         /system/user/profile                system.user.profile
+POST        /system/user/profile                system.user.profile
+
+GET         /system/roles                       system.role.list
+GET         /system/role/add                    system.role.add
+POST        /system/role/add                    system.role.add
+GET         /system/role/edit                   system.role.edit
+POST        /system/role/edit                   system.role.edit
+
+GET         /system/permissions                 system.permission.list
+GET         /system/permission/add              system.permission.add
+POST        /system/permission/add              system.permission.add
+GET         /system/permission/edit             system.permission.edit
+POST        /system/permission/edit             system.permission.edit
+GET         /system/permission/del              system.permission.del
+
+GET         /system/permission/groups           system.permissiongroup.list
+GET         /system/permission/group/add        system.permissiongroup.add
+POST        /system/permission/group/add        system.permissiongroup.add
+GET         /system/permission/group/edit       system.permissiongroup.edit
+POST        /system/permission/group/edit       system.permissiongroup.edit
+GET         /system/permission/group/del        system.permissiongroup.del
+
+GET         /system/menus                       system.menu.list
+GET         /system/menu/add                    system.menu.add
+POST        /system/menu/add                    system.menu.add
+GET         /system/menu/edit                   system.menu.edit
+POST        /system/menu/edit                   system.menu.edit
+GET         /system/menu/del                    system.menu.del
+
+*           /system/setting/add                 system.setting.add
+*           /system/setting/edit                system.setting.edit
+*           /system/setting/list                system.setting.list
+*           /system/setting/del                 system.setting.del
+
+GET         /language/package                   system.langpackage.list
+GET         /language/package/add               system.langpackage.add
+POST        /language/package/add               system.langpackage.add
+GET         /language/package/edit              system.langpackage.edit
+GET         /language/package/del               system.langpackage.del
+
+GET         /forum/postaudit/list               forum.postaudit.list
+GET         /forum/postaudit/edit               forum.postaudit.audit
+GET         /forum/postaudit/del                forum.postaudit.del
+POST        /forum/postaudit/doaudit            forum.postaudit.doAudit
+GET         /forum/postaudit/doaudit            forum.postaudit.doAudit
+
+GET         /attachment/attachment/list               attachment.attachment.list
+GET         /attachment/attachment/edit               attachment.attachment.audit
+GET         /attachment/attachment/del                attachment.attachment.del
+POST        /attachment/attachment/edit               attachment.attachment.doAudit
+GET         /attachment/attachment/attachmentFile               attachment.attachment.attachmentFile
+
+
+
+

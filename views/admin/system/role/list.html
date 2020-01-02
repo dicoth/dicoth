@@ -1,0 +1,121 @@
+{% include "../../header.html" %}
+{% include "../../navigation.html" %}
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group pull-right">
+                        <h4 class="page-title">Role</h4>
+                    </div>
+                    <ol class="breadcrumb hide-phone p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">HuntCMS</a></li>
+                        <li class="breadcrumb-item"><a href="#">Role</a></li>
+                        <li class="breadcrumb-item active">Role list</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- end page title end breadcrumb -->
+
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="m-b-30">
+                                <a href="{{ url('system.role.add' , '')}}" id="addToTable"
+                                   class="btn btn-success waves-effect waves-light">Add <i
+                                        class="mdi mdi-plus-circle-outline"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped add-edit-table" id="datatable-editable">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Updated</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <div class="form-inline m-b-20">
+                            <div class="row">
+
+                                <div class="col-md-12 text-xs-center">
+                                    <form class="form-horizontal" role="form" action="" method="get">
+                                        <div class="form-group float-left m-r-5">
+                                            <label class="control-label m-r-5">Status</label>
+                                            <select id="demo-foo-filter-status" name="status" class="form-control input-sm">
+                                                <option value="-1">Show all</option>
+                                                <option value="1">{{ trans("COMMON_SYSTEM_ENABLED") }}</option>
+                                                <option value="0">{{ trans("COMMON_SYSTEM_DISABLED") }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group float-left m-r-5">
+                                            <input id="demo-foo-search" name="keyword" type="text" placeholder="Search Role Name"
+                                                   class="form-control" autocomplete="on">
+                                        </div>
+                                        <div class="form-group float-left m-r-5">
+                                            <button type="submit"
+                                                    class="btn btn-icon waves-effect waves-light btn-success m-b-5"><i
+                                                    class="fa fa-search"></i></button>
+                                        </div>
+                                        <div class="form-group float-left m-r-5">
+                                            <a href="{{ url('system.role.list' , '')}}"
+                                               class="btn btn-icon waves-effect waves-light btn-success m-b-5"><i
+                                                    class="fa fa-refresh"></i></a>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        <tbody>
+                        {% for role in roles %}
+                        <tr>
+                            <td>{{role.id}}</td>
+                            <td>{{role.name}}</td>
+                            <td>{{date('Y-m-d H:i:s',role.created)}}</td>
+                            <td>{{date('Y-m-d H:i:s',role.updated)}}</td>
+                            <td>
+                                {% if role.status == 0 %}
+                                <span class="badge label-table badge-danger">{{ trans("COMMON_SYSTEM_DISABLED") }}</span>
+                                {% else %}
+                                <span class="badge label-table badge-success">{{ trans("COMMON_SYSTEM_ENABLED") }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a href="{{ url('system.role.edit' , '')}}?id={{ role.id }}" class="on-default edit-row"
+                                   data-toggle="tooltip" data-placement="top" title="" data-original-title="Click Edit"><i
+                                        class="fa fa-pencil"></i></a>
+                                <a href="{{ url('system.role.del' , '')}}?id={{ role.id }}" class="on-default remove-row"
+                                   data-toggle="tooltip" data-placement="top" title=""
+                                   data-original-title="Click Delete"><i class="fa fa-trash-o"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- end: col -->
+        </div>
+        <div class="clearfix">
+            {% include "../../paginate.html" %}
+        </div><!-- end row -->
+
+        <!-- end row -->
+
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
+
+{% include "../../footer.html" %}
