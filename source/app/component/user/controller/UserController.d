@@ -64,7 +64,6 @@ class UserController : BaseController
                 string id = to!string(t.tid);
                 GetTaskMObject.del(to!size_t(id));
 			} catch (Exception e) {
-                logError(toJson(e.msg));
 			}
 		});
 		GetTaskMObject().put(emailTask, dur!"seconds"(5));
