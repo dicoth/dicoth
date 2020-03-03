@@ -12,19 +12,19 @@ import hunt.entity.DefaultEntityManagerFactory;
 import hunt.logging;
 import std.conv;
 
-string client_ip()
-{
-    import hunt.framework.http.Request;
-    import std.array;
-    if(request().headerExists("X-Forwarded-For"))
-    {
-        string ips = request().header("X-Forwarded-For");
-        auto arr = ips.split(",");
-        if(arr.length >= 0)
-            return arr[0];
-    }
-    return request().clientAddress().toAddrString();
-}
+// string client_ip()
+// {
+//     import hunt.framework.http.Request;
+//     import std.array;
+//     if(request().headerExists("X-Forwarded-For"))
+//     {
+//         string ips = request().header("X-Forwarded-For");
+//         auto arr = ips.split(",");
+//         if(arr.length >= 0)
+//             return arr[0];
+//     }
+//     return request().clientAddress().toAddrString();
+// }
 
 string rnd(short len)
 {
@@ -52,18 +52,21 @@ string getAttachmentUrl(int id)
     return "/attachment/" ~ id.to!string;
 }
 
+import hunt.Exceptions;
 
 string findLocal() {
-    EntityManager _myManager;
-    string localLanguage = configManager().config("hunt").hunt.application.defaultLanguage.value;
-    auto userInfo = Application.getInstance().accessManager.user;
-    if(userInfo !is null){
-        auto user = new UserRepository().find(userInfo.id);
-        if(user !is null){
-            localLanguage = user.language;
-        }
-    }
-    return localLanguage;
+    // string localLanguage = config().application.defaultLanguage;
+    // auto userInfo = app().accessManager.user;
+    // if(userInfo !is null){
+    //     auto user = new UserRepository().find(userInfo.id);
+    //     if(user !is null){
+    //         localLanguage = user.language;
+    //     }
+    // }
+    // return localLanguage;
+
+    implementationMissing(false);
+    return "zh-CN";
 }
 
 string findConfig(string key) {
@@ -129,17 +132,17 @@ string randCode(){
     return code;
 }
 
-static int initNum(string paramName, int initValue = 1, string reqType = "POST"){
-    import std.array, std.string;
-    int resNum;
-    if(paramName && reqType){
-        string param;
-        if(reqType == "POST"){
-            param = request.post(paramName, initValue.to!string).replace(" ", "");
-        }else{
-            param = request.get(paramName, initValue.to!string).replace(" ", "");
-        }
-        resNum = isNumeric(param) ? to!int(param) : initValue;
-    }
-    return resNum;
-}
+// static int initNum(string paramName, int initValue = 1, string reqType = "POST"){
+//     import std.array, std.string;
+//     int resNum;
+//     if(paramName && reqType){
+//         string param;
+//         if(reqType == "POST"){
+//             param = request.post(paramName, initValue.to!string).replace(" ", "");
+//         }else{
+//             param = request.get(paramName, initValue.to!string).replace(" ", "");
+//         }
+//         resNum = isNumeric(param) ? to!int(param) : initValue;
+//     }
+//     return resNum;
+// }

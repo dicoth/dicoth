@@ -6,10 +6,10 @@ import app.component.system.repository.MenuRepository;
 import app.component.system.repository.UserRepository;
 import app.lib.Functions;
 import app.component.system.authentication.AuthenticationMiddleware;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;
-import hunt.framework.security.acl.Permission;
+// import hunt.framework.security.acl.Permission;
 import hunt.framework.Simplify;
 import hunt.shiro;
 import app.component.system.authentication.JwtToken;
@@ -18,6 +18,8 @@ public import std.algorithm;
 public import std.conv;
 public import std.json;
 public import std.string;
+
+import hunt.serialization.JsonSerializer;
 
 class AdminBaseController : Controller {
 
@@ -72,9 +74,13 @@ class AdminBaseController : Controller {
 
 	Response ResponseView (string viewPath, string lang = "") {
 		lang = lang == "" ? findLocal() : lang;
-		return new Response(request)
-		.setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-		.setContent(view.setLocale(lang).render(viewPath));
+		
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.setLocale(lang).render(viewPath));
+        return new Response(hb);
+
+		// return new Response(request)
+		// .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+		// .setContent(view.setLocale(lang).render(viewPath));
 	}
 
 	override bool after() {

@@ -110,7 +110,7 @@ int letter(int n, int pos, ubyte[] im, ubyte[] swr, uint8_t s1, uint8_t s2) {
 	for(;*p!=-101;p++) {
 		if(*p<0) {
 			if(*p==-100) { r+=200; i=r; sk1=s1+pos; row++; continue; }
-			i+=-*p;
+			i -= *p;
 			continue;
 		}
 

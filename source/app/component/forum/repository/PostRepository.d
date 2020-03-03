@@ -15,7 +15,7 @@ class PostRepository : EntityRepository!(Post, int)
     }
     // 
     void setCharset(){
-        _manager.getDatabase().query("SET NAMES utf8mb4");
+        _manager.getSession().query("SET NAMES utf8mb4");
     }
     Post[] findNewestByForum(short limit)
     {
@@ -40,7 +40,7 @@ class PostRepository : EntityRepository!(Post, int)
     int findCountByUid(int uid)
     {
         int count;
-        auto results = _manager.getDatabase().query("SELECT count(*) as count1 FROM "~Field._tableName~" WHERE uid='"~uid.to!string~"'");
+        auto results = _manager.getSession().query("SELECT count(*) as count1 FROM "~Field._tableName~" WHERE uid='"~uid.to!string~"'");
         foreach(Row result; results)
         {
             count = result.getValue("count1").toString.to!int;

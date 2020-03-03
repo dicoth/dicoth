@@ -34,10 +34,12 @@ class  PostAuditController  : AdminBaseController
       view.assign("pageModel",  data.getModel());
       view.assign("pageQuery", buildQueryString(request.input()));
 
+    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/postaudit/list"));
+    return new Response(hb);
 
-      return new Response( request)
-      .setHeader( HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-      .setContent( view.render( "forum/postaudit/list"));
+    //   return new Response( request)
+    //   .setHeader( HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+    //   .setContent( view.render( "forum/postaudit/list"));
    
    }
    
@@ -45,25 +47,27 @@ class  PostAuditController  : AdminBaseController
    @Action Response audit(int id)
    {
    
-      auto repo = new PostRepository( _cManager);
+        auto repo = new PostRepository( _cManager);
+
+        auto post = repo.find( id);
+
+        view.assign( "post",post);
+        int audit = 0;
+        if (post.deleted > 0){
+            audit = 3;
+        }else if (post.audited > 0 && post.status == 1){
+            audit = 1;
+        }else if (post.audited > 0 && post.status == 0){
+            audit = 2;
+        }
+        view.assign( "audit", audit);
    
-      auto post = repo.find( id);
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/postaudit/edit"));
+        return new Response(hb);
    
-      view.assign( "post",post);
-      int audit = 0;
-      if (post.deleted > 0){
-          audit = 3;
-      }else if (post.audited > 0 && post.status == 1){
-          audit = 1;
-      }else if (post.audited > 0 && post.status == 0){
-          audit = 2;
-      }
-      view.assign( "audit", audit);
-   
-   
-      return new Response( request)
-      .setHeader( HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-      .setContent( view.render( "forum/postaudit/edit"));
+    //   return new Response( request)
+    //   .setHeader( HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+    //   .setContent( view.render( "forum/postaudit/edit"));
    }
    
    @Action Response doAudit(PostAuditForm form)

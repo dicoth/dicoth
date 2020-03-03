@@ -9,7 +9,7 @@ import app.lib.Functions;
 
 import hunt.entity.domain;
 import hunt.framework;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.logging;
 import hunt.util.DateTime;
 import hunt.util.Serialize;

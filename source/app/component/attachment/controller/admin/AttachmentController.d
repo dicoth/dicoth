@@ -1,6 +1,9 @@
 module app.component.attachment.controller.admin.AttachmentController;
 
 import hunt.framework;
+import hunt.http.HttpBody;
+import hunt.logging.ConsoleLogger;
+import hunt.http.server.HttpServerResponse;
 
 import app.component.attachment.form.AttachmentForm;
 import app.component.attachment.model.Attachment;
@@ -9,7 +12,7 @@ import app.component.attachment.repository.AttachmentRepository;
 import app.component.user.repository.UserRepository;
 import app.lib.PageModel;
 import app.component.system.controller.AdminBaseController;
-import app.lib.NotFoundResponse;
+// import app.lib.NotFoundResponse;
 
 import app.lib.Functions;
 import std.conv;
@@ -42,9 +45,10 @@ class AttachmentController : AdminBaseController
         view.assign("pageModel",  data.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
 
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("attachment/attachment/list"));
+        HttpServerResponse r = new HttpServerResponse();
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/list"));
+        r.setBody(hb);
+        return r;
     }
 
 
@@ -80,9 +84,11 @@ class AttachmentController : AdminBaseController
         view.assign("audit", audit); 
         logError(url("admin:attachment.attachment"));
         view.assign("url",url("admin:attachment.attachment"));  
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("attachment/attachment/edit"));
+        
+        HttpServerResponse r = new HttpServerResponse();
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/edit"));
+        r.setBody(hb);
+        return r;
     }
 
     @Action Response doAudit(AttachmentForm form)
@@ -136,14 +142,14 @@ class AttachmentController : AdminBaseController
             {
                 response = new FileResponse(path);
                 response.setMimeType(file.mime);
-                response.setHeader("Cache-Control", "max-age=86400");
-                response.setHeader("content-type", file.mime);
+                response.header("Cache-Control", "max-age=86400");
+                response.header("content-type", file.mime);
                 response.setName(file.original_name);
 
                 response.loadData();
                 if(file.extension == ".gif" || file.extension != ".jpg" || file.extension != ".png" || file.extension != "jpeg")
                 {
-                    response.setHeader("Content-Disposition", "");
+                    response.header("Content-Disposition", "");
                 }
                 file.downloads += 1;
                 fileRepository.save(file);

@@ -18,6 +18,7 @@ import hunt.framework.application.ApplicationConfig;
 import hunt.util.Configuration;
 import std.stdio;
 import hunt.framework.file.UploadedFile;
+import hunt.framework.Simplify;
 
 
 import std.experimental.allocator.mallocator;

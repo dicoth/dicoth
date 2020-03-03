@@ -14,7 +14,7 @@ import app.lib.Functions;
 
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.util.DateTime;
 
 import std.algorithm;
@@ -32,9 +32,12 @@ class RoleController : AdminBaseController
 
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("system/role/list"));
+
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/role/list"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("system/role/list"));
 
     }
 
@@ -58,7 +61,7 @@ class RoleController : AdminBaseController
                 auto rolePermissionRepository = new RolePermissionRepository();
                 rolePermissionRepository.saves(role.id, permissionIds);
 
-                Application.getInstance().accessManager.refresh();  
+                // app().accessManager.refresh();  
                 return new RedirectResponse(request, url("system.role.list", null, "admin"));
             } catch(Exception e) {
                 assignError("role already existed.");
@@ -68,9 +71,12 @@ class RoleController : AdminBaseController
         view.assign("groups", (new PermissionGroupRepository()).findAll());
 
         string lang = findLocal();
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.setLocale(lang).render("system/role/add"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+            view.setLocale(lang).render("system/role/add"));
+        return new Response(hb);        
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.setLocale(lang).render("system/role/add"));
     }
 
     @Action Response edit()
@@ -95,7 +101,7 @@ class RoleController : AdminBaseController
                 roleRepository.save(role);
                 rolePermissionRepository.removes(id);
                 rolePermissionRepository.saves(id, permissionIds);
-                Application.getInstance().accessManager.refresh();  
+                // Application.instance().accessManager.refresh();  
                 return new RedirectResponse(request, "/admincp/system/roles");
             } catch(Exception e) {
                 assignError("error.");
@@ -126,8 +132,10 @@ class RoleController : AdminBaseController
         view.assign("groups", (new PermissionGroupRepository()).findAll());
 
         string lang = findLocal();
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.setLocale(lang).render("system/role/edit"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.setLocale(lang).render("system/role/edit"));
+        return new Response(hb);        
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.setLocale(lang).render("system/role/edit"));
     }
 }

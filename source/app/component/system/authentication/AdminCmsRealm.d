@@ -56,7 +56,7 @@ class AdminCmsRealm : AuthorizingRealm {
 
     void initEntityManager() {
         if(_cManager is null) {
-            _cManager = defaultEntityManagerFactory().createEntityManager();
+            _cManager = defaultEntityManagerFactory().currentEntityManager();
         }
     }
 

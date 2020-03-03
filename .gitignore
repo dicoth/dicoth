@@ -1,17 +1,32 @@
-huntforum.exe
-libmysql.dll
-.dub
-.DS_Store
-docs.json
-__dummy.html
+# Visual Studio Code
+#.vscode/
+
+# Compiled Object files
 *.o
 *.obj
-dub.selections.json
-dub.userprefs
-.idea
-huntforum.iml
-huntforum
-config/application.local.conf
-.vscode/launch.json
-storage/
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
 *.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+
+# Executables
+*.exe
+
+# DUB
+.dub
+dub.*.json
+docs.json
+__dummy.html
+docs/
+
+# Code coverage
+*.lst
+
+# Others
+storage/
+dicoth

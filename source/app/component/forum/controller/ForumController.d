@@ -1,6 +1,7 @@
 module app.component.forum.controller.ForumController;
+
 import hunt.framework;
-import hunt.framework.application.BreadcrumbsManager;
+// import hunt.framework.application.BreadcrumbsManager;
 import app.lib.BaseController;
 import app.lib.NotFoundResponse;
 import app.component.forum.repository.ForumRepository;
@@ -9,6 +10,8 @@ import app.component.forum.repository.PostRepository;
 import app.component.user.repository.UserRepository;
 import app.component.attachment.repository.AttachmentRepository;
 import app.lib.Functions;
+
+
 
 class ForumController : BaseController
 {
@@ -92,10 +95,14 @@ class ForumController : BaseController
         auto breadcrumbs = breadcrumbsManager.generate("forum.forum.forum", forum);
         view.assign("breadcrumbs", breadcrumbs);
         view.assign("title", breadcrumbsToTitle(breadcrumbs));
+        
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/forum_forum"));
 
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("forum/forum_forum"));
+		Response response = new Response();
+        response.withBody(hb);
+        return response;
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("forum/forum_forum"));
     }
     
 }

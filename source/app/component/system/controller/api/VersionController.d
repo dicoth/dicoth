@@ -18,9 +18,11 @@ class VersionController : Controller
         message.description = "test version";
         message.released = 1234567890;
 
-        auto res = new Response(request);
+        // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/admin/edit"));
+        return new Response();
+        // auto res = new Response(request);
         // res.json(toJson(message));
 
-        return res;
+        // return res;
     }
 }

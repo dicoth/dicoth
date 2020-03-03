@@ -6,6 +6,9 @@ import hunt.framework.http.Request;
 import hunt.framework.http.Response;
 import hunt.framework.http.JsonResponse;
 import app.component.user.model.User;
+
+import hunt.logging.ConsoleLogger;
+
 import std.algorithm.searching;
 import std.net.curl;
 import std.uri;
@@ -32,13 +35,16 @@ class UserAuthMiddleware : MiddlewareInterface
     {
         bool isVerify = this.verifyIsLogin();
         logError(isVerify);
-        if(canFind(forceLoginMCA, request.getMCA()) && isVerify == false)
-        {
-            Cookie sessionCookie = new Cookie("__auth_token__", "");
-            Cookie userCookie = new Cookie("userinfo", "");
-            import hunt.framework.Simplify;
-            return new RedirectResponse(request, url("user.user.login")).withCookie(sessionCookie).withCookie(userCookie);
-        }
+        // if(canFind(forceLoginMCA, request.getMCA()) && isVerify == false)
+        // {
+        //     Cookie sessionCookie = new Cookie("__auth_token__", "");
+        //     Cookie userCookie = new Cookie("userinfo", "");
+        //     import hunt.framework.Simplify;
+        //     return new RedirectResponse(request, url("user.user.login")).withCookie(sessionCookie).withCookie(userCookie);
+        // }
+        import hunt.Exceptions;
+        implementationMissing(false);
+
         if(isVerify == false)
         {
             Cookie sessionCookie = new Cookie("__auth_token__", "");
@@ -53,10 +59,14 @@ class UserAuthMiddleware : MiddlewareInterface
         import app.lib.JwtUtil;
         import std.conv;
 
-        if(JwtUtil.verify(request.cookie("__auth_token__"), configManager().config("hunt").hunt.application.secret.value))
-        {
-            return true;
-        }
-        return false;
+        import hunt.Exceptions;
+        implementationMissing(false);
+        return true;
+
+        // if(JwtUtil.verify(request.cookie("__auth_token__"), config().application.secret))
+        // {
+        //     return true;
+        // }
+        // return false;
     }
 }

@@ -14,7 +14,7 @@ import hunt.framework.Simplify;
 
 import hunt.entity.EntityManager;
 import hunt.entity.DefaultEntityManagerFactory;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 
 import hunt.logging.ConsoleLogger;
 import hunt.shiro;

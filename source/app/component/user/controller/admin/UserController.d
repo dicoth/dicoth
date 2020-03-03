@@ -26,23 +26,25 @@ class UserController : AdminBaseController
         view.assign("users", alldata.getContent());
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
-
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/user/list"));
+        
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/user/list"));
+        return new Response(hb);
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/user/list"));
     }
 
 
     @Action Response detailed(int id)
     {
         auto data = (new UserRepository(_cManager)).find(id);
-        
-
         view.assign("user", data);
-        
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/user/detailed"));
+
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/user/detailed"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/user/detailed"));
 
     }
     

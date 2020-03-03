@@ -25,15 +25,17 @@ import app.component.user.model.UserOauth;
 import app.component.user.repository.UserVerifycodeRepository;
 import app.component.user.repository.UserOauthRepository;
 import app.lib.Functions;
+import app.component.user.form.UserinfoForm;
+import app.component.user.form.OauthLoginForm;
+import app.component.user.helper.AuthHelper;
+
+import hunt.serialization.JsonSerializer;
+
+import arsd.email;
 import std.stdio;
 import std.conv;
 import std.range;
-import app.component.user.form.UserinfoForm;
-import app.component.user.form.OauthLoginForm;
-
-import arsd.email;
 import std.typecons;
-import app.component.user.helper.AuthHelper;
 import core.time;
 import app.task.EmailTask;
 
@@ -62,11 +64,11 @@ class UserController : BaseController
         emailTask.setFinish((Task t) {
 			try {
                 string id = to!string(t.tid);
-                GetTaskMObject.del(to!size_t(id));
+                taskManager.del(to!size_t(id));
 			} catch (Exception e) {
 			}
 		});
-		GetTaskMObject().put(emailTask, dur!"seconds"(5));
+		taskManager.put(emailTask, dur!"seconds"(5));
         int now = cast(int) time();
         UserVerifycode userVerifycode = new UserVerifycode();
         UserVerifycodeRepository userVerifycodeRepository = new UserVerifycodeRepository();
@@ -93,16 +95,22 @@ class UserController : BaseController
         UserVerifycodeRepository userVerifycodeRepository = new UserVerifycodeRepository();
         auto codeinfo = userVerifycodeRepository.findByAccountCode(touser,code);
         if(codeinfo is null ){
-            return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent("Your email validation code is invalid");
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, "Your email validation code is invalid");
+            return new Response(hb);
+                       
+            // return new Response(request)
+            // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            // .setContent("Your email validation code is invalid");
         }
         
         request.session().set("regaccount", touser);
-       
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent("<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+            "<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
+        return new Response(hb);
+
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent("<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
         
     } 
 
@@ -118,9 +126,12 @@ class UserController : BaseController
         makegif(im, gif);
         writeln(cast(string)l);
         request.session().set("captcha", cast(string)l);
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.IMAGE_GIF_VALUE.to!string)
-        .setContent(gif);
+
+        HttpBody hb = HttpBody.create(MimeType.IMAGE_GIF_VALUE, gif);
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.IMAGE_GIF_VALUE.to!string)
+        // .setContent(gif);
     }
 
     @Action Response register(RegisterForm form)
@@ -136,30 +147,42 @@ class UserController : BaseController
                     errorMsg = error;
                     break;
                 }
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                    "<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent("<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
             }
             if(form.password != form.rpassword)
             {
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE,
+                    "<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent("<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
             }
             string captcha = request.session().get("captcha");
             if(form.captcha == "" || captcha != form.captcha)
             {
                 request.session().remove("captcha");
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('captcha invalid!');window.history.back(-1);</script>");
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                    "<script>alert('captcha invalid!');window.history.back(-1);</script>");
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent("<script>alert('captcha invalid!');window.history.back(-1);</script>");
             }
             auto userRep = new UserRepository();
             if(userRep.findUserByUsername(form.username))
             {
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('This username had been existed');window.history.back(-1);</script>");
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                    "<script>alert('This username had been existed');window.history.back(-1);</script>");
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent("<script>alert('This username had been existed');window.history.back(-1);</script>");
             }
             string mail = request.session().get("regaccount");
             auto curtime = cast(int)time();
@@ -171,11 +194,11 @@ class UserController : BaseController
             userModel.password = AuthHelper.signPassword(form.password, userModel.salt);
             userModel.status = 1;
             userModel.updated = curtime;
-            userModel.ip = client_ip();
+            userModel.ip = request.ip();
             userModel.created = curtime;
             auto userRet = userRep.insert(userModel);
             
-            session.remove("regaccount");
+            request.session().remove("regaccount");
             
             auto userVerifycodeRepository = new UserVerifycodeRepository();
                 userVerifycodeRepository.updateStatus(mail);
@@ -195,16 +218,20 @@ class UserController : BaseController
                 }
                 
             }
-            return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent("<script>alert('registration success!');window.window.location.href='"~url("user.user.login")~"';</script>");
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                "<script>alert('registration success!');window.window.location.href='"~url("user.user.login")~"';</script>");
+            return new Response(hb);            
+            // return new Response(request)
+            // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            // .setContent("<script>alert('registration success!');window.window.location.href='"~url("user.user.login")~"';</script>");
         }
         string regaccount = request.session().get("regaccount");
         view.assign("regaccount",regaccount);
-        
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("register"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("register"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("register"));
     }
 
     @Action Response login(LoginForm form)
@@ -228,9 +255,11 @@ class UserController : BaseController
             auto result = form.valid();
             if(!result.isValid){
                 view.assign("errors", result.messages());
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent(view.render("user/login"));
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent(view.render("user/login"));
             }
             string username = form.username;
             string password = form.password;
@@ -241,9 +270,11 @@ class UserController : BaseController
                 if(!userinfo){
                     errorsArr["error"] ="user not exist";
                     view.assign("errors", errorsArr);
-                    return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent(view.render("user/login"));
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+                    return new Response(hb);                    
+                    // return new Response(request)
+                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    // .setContent(view.render("user/login"));
                     }
                 }
 
@@ -251,9 +282,11 @@ class UserController : BaseController
             if(userinfo.password != passwordInput){
                 errorsArr["error"] ="username or password validation failed";
                 view.assign("errors", errorsArr);
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent(view.render("user/login"));
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent(view.render("user/login"));
             }
 
             auto JwtUserinfo = new JwtUserInfo();
@@ -268,7 +301,7 @@ class UserController : BaseController
             {
                 expireSecond= 2592000;
             }
-            string tokenString = JwtUtil.sign(JwtUserinfo, configManager().config("hunt").hunt.application.secret.value, expireSecond);
+            string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
             Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
             
             JSONValue uinfo = toJson(JwtUserinfo);
@@ -282,7 +315,7 @@ class UserController : BaseController
             }else{
                 tourl = url("forum.forum.list");
             }
-            Application.getInstance().cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+            cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
             
             return new RedirectResponse(request, tourl)
                             .withCookie(userCookie)
@@ -290,9 +323,11 @@ class UserController : BaseController
         }
 
         view.assign("errors", errorsArr);
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/login"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/login"));
     }
     
     @Action Response settings(){
@@ -301,10 +336,11 @@ class UserController : BaseController
         auto userRepository = new  UserRepository(_cManager);
         auto userInfo = userRepository.findById(userid);
         view.assign("userInfo",userInfo);
-        
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/setting"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/setting"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/setting"));
     }
     
     @Action string editprofile(UserinfoForm form){
@@ -376,9 +412,11 @@ class UserController : BaseController
         auto userInfoData = userRepository.findUserInfo(id);    
         if (!userInfoData)
         {
-            return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(errorPageHtml(404));
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, errorPageHtml(404));
+            return new Response(hb);            
+            // return new Response(request)
+            // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            // .setContent(errorPageHtml(404));
         }
         view.assign("userInfo", userInfoData);
         auto threadRepository = new ThreadRepository(_cManager);
@@ -393,10 +431,11 @@ class UserController : BaseController
         view.assign("postCount", countres);
 
         view.assign("breadcrumbs", breadcrumbsManager.generate("user.user.profile", userInfoData));
-
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/home"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/home"));
+        return new Response(hb);
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/home"));
     }
 
     @Action Response logout()
@@ -407,7 +446,7 @@ class UserController : BaseController
         Cookie sessionCookieUser = new Cookie("userinfo","",0);
         Cookie sessionCookieSession = new Cookie("hunt_session","",0);
 
-        return new RedirectResponse("/")
+        return new RedirectResponse(this.request(), "/")
                 .withCookie(sessionCookieToken)
                 .withCookie(sessionCookieUser)
                 .withCookie(sessionCookieSession);
@@ -421,9 +460,12 @@ class UserController : BaseController
                 import app.lib.Oauth;
                 auto oauth = new Oauth("github");
                 if(!code){
-                    return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent("<script>alert('Wrong parameter !');window.history.back(-1);</script>");       
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                        "<script>alert('Wrong parameter !');window.history.back(-1);</script>");
+                    return new Response(hb);                    
+                    // return new Response(request)
+                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    // .setContent("<script>alert('Wrong parameter !');window.history.back(-1);</script>");       
                 }
          
                 JSONValue oauthUserInfo = oauth.get_user_info(code);    
@@ -435,15 +477,18 @@ class UserController : BaseController
                         auto UserOauthInfo = userOauthRepository.findByOauthToken(oauthToken);                        
                         if(!UserOauthInfo){
                             Cookie oauthCookie = new Cookie("__oauth_token__", oauthToken,3600);
-                            new Response(request).withCookie(oauthCookie);
+                            // new Response(request).withCookie(oauthCookie);
                             string tourl = "/user/oauthlogin";
                             return new RedirectResponse(request, tourl);
                         }
                         uid = UserOauthInfo.uid;
                 }else{
-                    return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent("<script>alert('Error hanppend !');window.history.back(-1);</script>");
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                        "<script>alert('Error hanppend !');window.history.back(-1);</script>");
+                    return new Response(hb);                    
+                    // return new Response(request)
+                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    // .setContent("<script>alert('Error hanppend !');window.history.back(-1);</script>");
                 }
 
                 auto userinfo = userRep.findUserInfo(uid);
@@ -456,7 +501,7 @@ class UserController : BaseController
                     
                     long expireSecond = 86400;
                     
-                    string tokenString = JwtUtil.sign(JwtUserinfo, configManager().config("hunt").hunt.application.secret.value, expireSecond);
+                    string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
                     Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
                     
                     JSONValue uinfo = toJson(JwtUserinfo);
@@ -466,20 +511,26 @@ class UserController : BaseController
                     string tourl = "";
                     tourl = url("forum.forum.list");
 
-                    Application.getInstance().cache().set("user_login_token_"~uid.to!string, tokenString, cast(uint)expireSecond);
+                    cache().set("user_login_token_"~uid.to!string, tokenString, cast(uint)expireSecond);
                     
                     return new RedirectResponse(request, tourl)
                                     .withCookie(userCookie)
                                     .withCookie(sessionCookie);
                 }else{
-                    return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent("<script>alert('Error data !');window.history.back(-1);</script>");
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                        "<script>alert('Error data !');window.history.back(-1);</script>");
+                    return new Response(hb);                    
+                    // return new Response(request)
+                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    // .setContent("<script>alert('Error data !');window.history.back(-1);</script>");
                 }
         }catch(Exception e){
-            return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent("<script>alert('"~e.msg~"');window.history.back(-1);</script>");
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                "<script>alert('"~e.msg~"');window.history.back(-1);</script>");
+            return new Response(hb);            
+            // return new Response(request)
+            //         .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //         .setContent("<script>alert('"~e.msg~"');window.history.back(-1);</script>");
          } 
         
     }
@@ -496,9 +547,11 @@ class UserController : BaseController
             auto result = form.valid();
             if(!result.isValid){
                 view.assign("errors", result.messages());
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent(view.render("user/oauthlogin"));
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent(view.render("user/oauthlogin"));
             }
             string username = form.username;
             string password = form.password;
@@ -509,9 +562,11 @@ class UserController : BaseController
                 if(!userinfo){
                     errorsArr["error"] ="user not exist";
                     view.assign("errors", errorsArr);
-                    return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent(view.render("user/oauthlogin"));
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+                    return new Response(hb);                    
+                    // return new Response(request)
+                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    // .setContent(view.render("user/oauthlogin"));
                     }
                 }
 
@@ -519,9 +574,11 @@ class UserController : BaseController
             if(userinfo.password != passwordInput){
                 errorsArr["error"] ="username or password validation failed";
                 view.assign("errors", errorsArr);
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent(view.render("user/oauthlogin"));
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent(view.render("user/oauthlogin"));
             }
 
             auto JwtUserinfo = new JwtUserInfo();
@@ -536,7 +593,7 @@ class UserController : BaseController
             {
                 expireSecond= 2592000;
             }
-            string tokenString = JwtUtil.sign(JwtUserinfo, configManager().config("hunt").hunt.application.secret.value, expireSecond);
+            string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
             Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
             
             JSONValue uinfo = toJson(JwtUserinfo);
@@ -546,15 +603,17 @@ class UserController : BaseController
             string tourl = "";
             tourl = url("forum.forum.list");
             
-            Application.getInstance().cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+            this.cache.set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
             
             string oauth_token = request.cookie("__oauth_token__");
             if(!oauth_token){
                 errorsArr["error"] ="Your github token has been expired";
                 view.assign("errors", errorsArr);
-                return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent(view.render("user/login"));
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+                return new Response(hb);                
+                // return new Response(request)
+                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                // .setContent(view.render("user/login"));
             }
             
 
@@ -575,9 +634,11 @@ class UserController : BaseController
                             .withCookie(sessionCookie);
         }
         view.assign("errors", errorsArr);
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("user/oauthlogin"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+        return new Response(hb);        
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("user/oauthlogin"));
         
     }
 

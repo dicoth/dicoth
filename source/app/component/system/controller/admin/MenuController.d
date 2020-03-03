@@ -14,7 +14,7 @@ import hunt.framework;
 import hunt.framework.application.ApplicationConfig;
 import hunt.framework.i18n.I18n;
 import hunt.logging;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.util.Configuration;
 import hunt.util.DateTime;
 import hunt.util.Serialize;
@@ -90,6 +90,21 @@ class MenuController : AdminBaseController {
         makePageBreadCrumbs("menuAdd");
 
         return ResponseView("system/menu/add", lang);
+    }
+
+    private int initNum(string paramName, int initValue = 1, string reqType = "POST"){
+        import std.array, std.string;
+        int resNum;
+        if(paramName && reqType){
+            string param;
+            if(reqType == "POST"){
+                param = request.post(paramName, initValue.to!string).replace(" ", "");
+            }else{
+                param = request.get(paramName, initValue.to!string).replace(" ", "");
+            }
+            resNum = isNumeric(param) ? to!int(param) : initValue;
+        }
+        return resNum;
     }
 
     @Action 
@@ -189,8 +204,8 @@ class MenuController : AdminBaseController {
                 lpn.value = showname;
                 lpn.updated = now;
                 repository.save(lpn);
-                I18n i18n = I18n.instance();
-                i18n.add(lpn.local, keyword, lpn.value);
+                // I18n i18n = I18n.instance();
+                translationManager.add(lpn.local, keyword, lpn.value);
             }
         }else{
             lpn = new LangPackage();
@@ -200,8 +215,8 @@ class MenuController : AdminBaseController {
             lpn.created = now;
             lpn.updated = now;
             repository.save(lpn);
-            I18n i18n = I18n.instance();
-            i18n.add(lpn.local, lpn.key, lpn.value);
+            // I18n i18n = I18n.instance();
+            translationManager.add(lpn.local, lpn.key, lpn.value);
         }
         return true;
     }

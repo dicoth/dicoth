@@ -1,6 +1,7 @@
 module app.component.forum.controller.admin.ForumController;
 
 import hunt.framework;
+import hunt.http.HttpMethod;
 
 import app.component.system.controller.AdminBaseController;
 import app.lib.Functions;
@@ -31,9 +32,11 @@ class  ForumController  : AdminBaseController
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
 
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("forum/admin/list"));
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/admin/list"));
+        return new Response(hb);
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("forum/admin/list"));
     }
 
     @Action Response add(ForumForm form, int pid)
@@ -68,9 +71,11 @@ class  ForumController  : AdminBaseController
         auto forums = toForumList(0, groupForums, 0);
         view.assign("groupForums", forums);
 
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.render("forum/admin/add"));
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/admin/add"));
+        return new Response(hb);
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.render("forum/admin/add"));
 
     }
 
@@ -152,9 +157,13 @@ class  ForumController  : AdminBaseController
         else
         {
             this.assignError("Edit error");
-            return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
+            
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                "<script>alert('Must selected language!');history.back(-1);</script>");
+            return new Response(hb);
+            // return new Response(request)
+            //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //     .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
         }
 
         }
@@ -167,9 +176,14 @@ class  ForumController  : AdminBaseController
         else
         {
             this.assignError("Parameter error");
-            return new Response(request)
-                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
+            
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                "<script>alert('Must selected language!');history.back(-1);</script>");
+            return new Response(hb);
+
+            // return new Response(request)
+            //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //     .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
         }
 
         view.assign("forum", forum);
@@ -179,9 +193,26 @@ class  ForumController  : AdminBaseController
         auto forums = toForumList(0, groupForums, 0);
         view.assign("groupForums", forums);
 
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.render("forum/admin/edit"));
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/admin/edit"));
+        return new Response(hb);
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.render("forum/admin/edit"));
+    }
+
+
+    int initInt(string paramName, int initValue = 1, string reqType = "POST"){
+        int resNum;
+        if(paramName && reqType){
+            string param;
+            if(reqType == "POST"){
+                param = request.post(paramName, initValue.to!string).replace(" ", "");
+            }else{
+                param = request.get(paramName, initValue.to!string).replace(" ", "");
+            }
+            resNum = isNumeric(param) ? to!int(param) : initValue;
+        }
+        return resNum;
     }
 
     @Action Response del(int id)

@@ -93,7 +93,7 @@ class ForumRepository : EntityRepository!(Forum, int)
     int DelForum(int pid)
     {
         int res;
-        auto findCount = _manager.getDatabase().query("SELECT COUNT(id) AS num FROM hc_forum WHERE deleted = 0 AND pid = " ~ pid.to!string);
+        auto findCount = _manager.getSession().query("SELECT COUNT(id) AS num FROM hc_forum WHERE deleted = 0 AND pid = " ~ pid.to!string);
         foreach(tmpData; findCount)
         {
             string v = tmpData["num"].toString();

@@ -88,14 +88,14 @@ class AttachmentController : BaseController
 
                 response = new FileResponse(path);
                 response.setMimeType(file.mime);
-                response.setHeader("Cache-Control", "max-age=86400");
-                response.setHeader("content-type", file.mime);
+                response.header("Cache-Control", "max-age=86400");
+                response.header("content-type", file.mime);
                 response.setName(file.original_name);
 
                 response.loadData();
                 if(file.extension == ".gif" || file.extension != ".jpg" || file.extension != ".png" || file.extension != "jpeg")
                 {
-                    response.setHeader("Content-Disposition", "");
+                    response.header("Content-Disposition", "");
                 }
                 file.downloads += 1;
                 fileRepository.save(file);

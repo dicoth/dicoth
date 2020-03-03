@@ -17,8 +17,8 @@ import hunt.framework.Simplify;
 
 import hunt.entity.EntityManager;
 import hunt.entity.DefaultEntityManagerFactory;
-import hunt.http.codec.http.model.HttpMethod;
-import hunt.http.codec.http.model.HttpHeader;
+import hunt.http.HttpMethod;
+import hunt.http.HttpHeader;
 
 import hunt.logging.ConsoleLogger;
 import hunt.shiro;
@@ -26,6 +26,8 @@ import hunt.shiro;
 import std.array;
 import std.string;
 import common;
+
+import hunt.Exceptions;
 
 class AuthenticationMiddleware : MiddlewareInterface {
 
@@ -39,9 +41,10 @@ class AuthenticationMiddleware : MiddlewareInterface {
     override Response onProcess(Request request, Response response) {
         
         infof("path: %s, method: %s", request.path(), request.method );
-        if(request.getMCA() == ("system.user.login") ) { 
-            return null;
-        }
+        implementationMissing(false);
+        // if(request.getMCA() == ("system.user.login") ) { 
+        //     return null;
+        // }
 
         string tokenString = request.header(HttpHeader.AUTHORIZATION);
 

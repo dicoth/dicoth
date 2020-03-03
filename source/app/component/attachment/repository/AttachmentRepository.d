@@ -50,7 +50,7 @@ class AttachmentRepository : EntityRepository!(Attachment, int)
 
     int updatePostAttachmentsBulk(string postid,string uid, string attachment_ids)
     {        
-        auto results = _manager.getDatabase().query(
+        auto results = _manager.getSession().query(
             "UPDATE hc_attachment u SET item_id="~  postid ~ "  WHERE u.id in ("~attachment_ids~") and  u.uid="~uid~" AND u.item_id=0 AND u.type='post'"
             );
         return 1;
@@ -177,7 +177,7 @@ class AttachmentRepository : EntityRepository!(Attachment, int)
     int findCountAttachmentByUid(int uid, int item_id)
     {
         int count;
-        auto results = _manager.getDatabase().query("SELECT count(*) as count1 FROM "~Field._tableName~" WHERE uid='"~uid.to!string~"' AND item_id='"~item_id.to!string~"' AND type='post' AND deleted > 0 ;");
+        auto results = _manager.getSession().query("SELECT count(*) as count1 FROM "~Field._tableName~" WHERE uid='"~uid.to!string~"' AND item_id='"~item_id.to!string~"' AND type='post' AND deleted > 0 ;");
         foreach(Row result; results)
         {
             count = result.getValue("count1").toString.to!int;

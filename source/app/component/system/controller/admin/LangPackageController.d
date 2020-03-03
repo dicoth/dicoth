@@ -2,7 +2,7 @@ module app.component.system.controller.admin.LangPackageController;
 
 import hunt.framework;
 import hunt.framework.i18n.I18n;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.util.Serialize;
 import hunt.util.DateTime;
 import hunt.entity.domain;
@@ -49,9 +49,14 @@ class LangPackageController : AdminBaseController{
             lp.local = request.post("local", "");
             lp.value = request.post("value", "");
             if(lp.local == ""){
-                return new Response(request)
-                    .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
+                
+                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                    view.render("<script>alert('Must selected language!');history.back(-1);</script>"));
+                return new Response(hb);
+
+                // return new Response(request)
+                //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                //     .setContent("<script>alert('Must selected language!');history.back(-1);</script>");
             }
 
             int id = isNumeric(request.post("id", "0")) ? (request.post("id", "0")).to!int : 0;
@@ -63,34 +68,46 @@ class LangPackageController : AdminBaseController{
                     lp.key = exsitData.key;
                     lp.id = id;
                 }else{
-                    return new Response(request)
-                        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                        .setContent("<script>alert('Can not find the data!');history.back(-1);</script>");
+                    
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                        "<script>alert('Can not find the data!');history.back(-1);</script>");
+                    return new Response(hb);
+                    // return new Response(request)
+                    //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    //     .setContent("<script>alert('Can not find the data!');history.back(-1);</script>");
                 }
             }else{
                 lp.key = request.post("key", "");
                 if(indexOf(lp.key, `__`) == 0){
                     int count = repository.findKey(lp.key);
                     if(count == 0){
-                        return new Response(request)
-                            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                            .setContent("<script>alert('User cant defind header of a key with __');history.back(-1);</script>");
+                        
+                        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                            "<script>alert('User cant defind header of a key with __');history.back(-1);</script>");
+                        return new Response(hb);
+                        // return new Response(request)
+                        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                        //     .setContent("<script>alert('User cant defind header of a key with __');history.back(-1);</script>");
                     }
                 }
                 lp.created = now;
                 int isAble = repository.isSet(lp.local, lp.key);
                 if(isAble == 1){
-                    return new Response(request)
-                        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                        .setContent("<script>alert('The key already exist！');history.back(-1);</script>");
+                    
+                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                        "<script>alert('The key already exist！');history.back(-1);</script>");
+                    return new Response(hb);
+                    // return new Response(request)
+                    //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                    //     .setContent("<script>alert('The key already exist！');history.back(-1);</script>");
                 }
             }
             lp.updated = now;
 
             auto saveRes = repository.save(lp);
             if (saveRes !is null){
-                I18n i18n = I18n.instance();
-                i18n.add(lp.local, lp.key, lp.value);
+                // I18n i18n = I18n.instance();
+                translationManager.add(lp.local, lp.key, lp.value);
                 return new RedirectResponse(request, url("system.langpackage.list", null, "admin"));
             }
         }

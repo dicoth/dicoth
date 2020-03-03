@@ -20,9 +20,10 @@ import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;
 import hunt.framework.http.RedirectResponse;
 import hunt.logging;
-import hunt.http.codec.http.model.HttpMethod;
-import hunt.http.codec.http.model.HttpHeader;
+import hunt.http.HttpMethod;
+import hunt.http.HttpHeader;
 import hunt.shiro;
+import hunt.serialization.JsonSerializer;
 import hunt.util.MimeType;
 import hunt.util.DateTime;
 
@@ -47,9 +48,12 @@ class UserController : AdminBaseController {
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
 
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("system/user/list"));
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/list"));
+        return new Response(hb);
+
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("system/user/list"));
     }
 
     @Action Response add()
@@ -104,9 +108,13 @@ class UserController : AdminBaseController {
         view.assign("languages", (new LanguageRepository()).findEnable());
         
         string lang = findLocal();
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.setLocale(lang).render("system/user/add"));
+        
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+            view.setLocale(lang).render("system/user/add"));
+        return new Response(hb);
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.setLocale(lang).render("system/user/add"));
     }
 
     @Action Response edit()
@@ -163,9 +171,12 @@ class UserController : AdminBaseController {
         view.assign("languages", (new LanguageRepository()).findEnable());
 
         string lang = findLocal();
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.setLocale(lang).render("system/user/edit"));
+        
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/edit"));
+        return new Response(hb);
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.setLocale(lang).render("system/user/edit"));
     }
 
     @Action string del()
@@ -227,7 +238,7 @@ class UserController : AdminBaseController {
                         info("tokenString: ", tokenString);
                         setLocale(userModel.language);
                         info("user logined: ", toJson(userModel));
-                        Application.getInstance().accessManager.addUser(userModel.id);
+                        // Application.instance().accessManager.addUser(userModel.id);
                         Cookie langCookie = new Cookie("Content-Language", userModel.language);
                         Cookie sessionCookie = new Cookie("__auth_token__", tokenString, 86400);
 
@@ -240,10 +251,13 @@ class UserController : AdminBaseController {
                 }
             }
         }
-        
-        return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(view.render("system/user/login"));
+
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/login"));
+        return new Response(hb);
+
+        // return new Response(request)
+        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        //     .setContent(view.render("system/user/login"));
     }
 
     @Action Response logout()

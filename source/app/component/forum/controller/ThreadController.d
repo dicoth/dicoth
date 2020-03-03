@@ -2,7 +2,8 @@ module app.component.forum.controller.ThreadController;
 
 import hunt.framework;
 import hunt.logging;
-import hunt.framework.application.BreadcrumbsManager;
+import hunt.http.Cookie;
+// import hunt.framework.application.BreadcrumbsManager;
 
 import app.lib.BaseController;
 import app.lib.NotFoundResponse;
@@ -67,7 +68,7 @@ class ThreadController : BaseController
             string is_read = request.cookie(cookie_thread);
             if(!is_read){
                 Cookie threadCookie = new Cookie(cookie_thread, "1",3600);
-                new Response(request).withCookie(threadCookie);
+                new Response().withCookie(threadCookie);
                 threadRepository.read(thread);
             }
         }
@@ -118,9 +119,13 @@ class ThreadController : BaseController
         view.assign("title", breadcrumbsToTitle(breadcrumbs));
 
         view.assign("idx_star", (page-1)*limit + 1 );
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("forum/thread_thread"));
+        
+		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/thread_thread"));
+        return new Response(hb);
+
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("forum/thread_thread"));
     }
     
     @Action string create(int forumId)
@@ -442,12 +447,11 @@ class ThreadController : BaseController
 
             return new RedirectResponse(request, backurl);
 
-        }catch(Exception e){
-            return new Response(request)
-            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            .setContent(e.msg);
+        }catch(Exception e) {
+            warning(e);
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, e.msg);
+            return new Response(hb);
         }
-        
     }
 
     @Action
@@ -478,8 +482,12 @@ class ThreadController : BaseController
         view.assign("pageModel", threadsPage.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
         view.assign("paginateHtml", view.render("paginate"));
-        return new Response(request)
-        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        .setContent(view.render("forum/search"));
+        
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/search"));
+        return new Response(hb);
+
+        // return new Response(request)
+        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        // .setContent(view.render("forum/search"));
     }
 }

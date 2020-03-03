@@ -2,7 +2,7 @@ module app.lib.BaseController;
 
 import hunt.framework;
 public import std.json;
-import hunt.http.codec.http.model.HttpMethod;
+import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;
 import app.component.user.model.User;
 import app.middleware.UserAuthMiddleware;
@@ -23,12 +23,12 @@ public import app.middleware.UserAuthMiddleware;
 class BaseController : Controller
 {
     EntityManager _cManager;
-    protected ConfigBuilder _conf;
+    // protected ConfigBuilder _conf;
 
     this()
     {
-        _cManager = defaultEntityManagerFactory().createEntityManager();
-        _conf = configManager().config("hunt");
+        _cManager = defaultEntityManagerFactory().currentEntityManager();
+        // _conf = configManager().config("hunt");
     }
 
     override bool before()
