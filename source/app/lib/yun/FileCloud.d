@@ -34,7 +34,7 @@ class FileCloud
     this()
     {
         _conf = configManager().config("hunt");
-        localPath = _conf.hunt.upload.doPath.value != "" ? _conf.hunt.upload.doPath.value : localPath;
+        localPath = _conf.hunt.upload.path.value != "" ? _conf.hunt.upload.path.value : localPath;
     }
 
     string getLocalFilePath(string filename)

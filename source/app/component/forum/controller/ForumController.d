@@ -24,7 +24,7 @@ class ForumController : BaseController
     }
 
     @Action
-    string list()
+    Response list()
     {
         auto forumRepository = new ForumRepository(_cManager);
         auto threadRepository = new ThreadRepository(_cManager);
@@ -41,7 +41,10 @@ class ForumController : BaseController
         view.assign("breadcrumbs", breadcrumbs);
         view.assign("title", breadcrumbsToTitle(breadcrumbs));
 
-        return view.render("forum/forum_list");
+        // return view.render("forum/forum_list");
+        
+        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/forum_list"));
+        return new Response(hb);
     }
 
     

@@ -4,8 +4,9 @@ import jwt;
 import hunt.logging.ConsoleLogger;
 import hunt.util.Serialize;
 import hunt.util.DateTime;
-import std.array;
 
+import std.array;
+import std.json;
 
 class JwtUtil {
 
@@ -45,7 +46,6 @@ class JwtUtil {
     }
 
     static JwtUserInfo getInfo(string token) {
-        import std.json;
         JwtUserInfo info;
         try {
             token = token.replaceFirst("Bearer ", "");
@@ -54,7 +54,7 @@ class JwtUtil {
             return toObject!JwtUserInfo(parseJSON(jStr));
         } catch (Exception e) {
             warning(e);
-            return info;
+            return null;
         }
     }
 

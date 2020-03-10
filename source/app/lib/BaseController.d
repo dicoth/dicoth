@@ -16,6 +16,8 @@ import app.component.user.repository.UserRepository;
 import app.lib.JwtToken;
 import app.lib.JwtUtil;
 import std.range;
+
+import hunt.logging.ConsoleLogger;
 import hunt.shiro;
 import app.lib.Exceptions;
 public import app.middleware.UserAuthMiddleware;
@@ -27,7 +29,8 @@ class BaseController : Controller
 
     this()
     {
-        _cManager = defaultEntityManagerFactory().currentEntityManager();
+		_cManager = entityManager();
+        // _cManager = defaultEntityManagerFactory().currentEntityManager();
         // _conf = configManager().config("hunt");
     }
 
@@ -43,15 +46,19 @@ class BaseController : Controller
         {
             tokenString = request.cookie("__auth_token__");
         }
-        auto baseUserInfo = JwtUtil.getInfo(tokenString);
-        view.assign("session_user",baseUserInfo);
+
+        info("xxx tokenString=>", tokenString);
+        if(!tokenString.empty) {
+            auto baseUserInfo = JwtUtil.getInfo(tokenString);
+            view.assign("session_user",baseUserInfo);
+        }
         return true;
     }
 
     override bool after()
     {
-        if(_cManager){
-            _cManager.close();
+        if(entityManager){
+            entityManager.close();
         }
         return true;
     }

@@ -28,7 +28,7 @@ class AdminBaseController : Controller {
 	private string[] _alertErrorMessages;
 	EntityManager _cManager;
 	this() {
-		_cManager = defaultEntityManager();
+		_cManager = entityManager();
 		addMiddleware(new AuthenticationMiddleware());
 	}
 
