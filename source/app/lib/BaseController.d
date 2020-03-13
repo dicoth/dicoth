@@ -48,6 +48,7 @@ class BaseController : Controller
         }
 
         info("xxx tokenString=>", tokenString);
+
         if(!tokenString.empty) {
             auto baseUserInfo = JwtUtil.getInfo(tokenString);
             view.assign("session_user",baseUserInfo);

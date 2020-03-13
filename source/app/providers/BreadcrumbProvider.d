@@ -4,6 +4,7 @@ module app.providers.BreadcrumbProvider;
 import hunt.framework.provider.ServiceProvider;
 import hunt.framework.provider.BreadcrumbServiceProvider;
 import hunt.framework.application;
+import hunt.framework.Simplify;
 
 import hunt.logging.ConsoleLogger;
 
