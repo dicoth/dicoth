@@ -39,9 +39,10 @@ void main(string[] args)
     //     i18n.merge(key, oneArray);
     // }
     
+    app.register!AuthProvider; 
     app.register!BreadcrumbProvider; 
 
-    initializeShiro();
+    // initializeShiro();
 
     app.run(args);
 }

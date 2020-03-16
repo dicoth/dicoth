@@ -47,7 +47,7 @@ class BaseController : Controller
             tokenString = request.cookie("__auth_token__");
         }
 
-        info("xxx tokenString=>", tokenString);
+        info("tokenString=>", tokenString);
 
         if(!tokenString.empty) {
             auto baseUserInfo = JwtUtil.getInfo(tokenString);
