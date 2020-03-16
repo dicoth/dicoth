@@ -72,8 +72,6 @@ class AdminCmsRealm : AuthorizingRealm {
 
         auto userModel = (new UserRepository()).findByEmail(username);
 
-
-
         if(userModel !is null) {
             if(JwtUtil.verify(tokenString, username, userModel.password)) {
                 String credentials = new String(tokenString);

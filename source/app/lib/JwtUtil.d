@@ -8,8 +8,10 @@ import hunt.util.DateTime;
 import std.array;
 import std.json;
 
+/**
+ * 
+ */
 class JwtUtil {
-
     
     __gshared long EXPIRE_TIME = 5 * 60 * 1000;
     static string TOKEN_TYPE = "Bearer";
@@ -17,6 +19,8 @@ class JwtUtil {
     static bool verify(string token, string secret) {
         try {
             token = token.replaceFirst("Bearer ", "");
+            if(token.empty) return false;
+
             Token tk = jwt.verify(token, secret, [JWTAlgorithm.HS256, JWTAlgorithm.HS512]);
             return true;
         } catch (Exception e) {

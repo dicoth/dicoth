@@ -241,6 +241,8 @@ class UserController : BaseController
         string ationurl = "/login";
         string[string] errorsArr;
 
+        // form = request.bindForm!LoginForm();
+
         if(!redirect_uri.empty){
             ationurl = ationurl~"?redirect_uri="~redirect_uri;
         }
@@ -249,85 +251,74 @@ class UserController : BaseController
         
         string client_id = findConfig("github.appid");
         view.assign("client_id",client_id);
-        if (request.method == HttpMethod.POST)
-        {
-            view.assign("username", form.username);
-            auto result = form.valid();
-            if(!result.isValid){
-                view.assign("errors", result.messages());
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-                return new Response(hb);                
-                // return new Response(request)
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent(view.render("user/login"));
-            }
-            string username = form.username;
-            string password = form.password;
-            auto userRep = new UserRepository();
-            auto userinfo = userRep.findUserByUsername(username);
-            if(!userinfo){
-                userinfo = userRep.findUserByEmail(username);
-                if(!userinfo){
-                    errorsArr["error"] ="user not exist";
-                    view.assign("errors", errorsArr);
-                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-                    return new Response(hb);                    
-                    // return new Response(request)
-                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    // .setContent(view.render("user/login"));
-                    }
-                }
+        if (request.method != HttpMethod.POST) {
+            view.assign("errors", errorsArr);
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+            return new Response(hb);    
+        }    
 
-            string passwordInput = AuthHelper.signPassword(password,userinfo.salt);
-            if(userinfo.password != passwordInput){
-                errorsArr["error"] ="username or password validation failed";
+        warningf("username: %s, password: %s", form.username, form.password);
+
+        view.assign("username", form.username);
+        auto result = form.valid();
+        if(!result.isValid){
+            view.assign("errors", result.messages());
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+            return new Response(hb);                
+        }
+        string username = form.username;
+        string password = form.password;
+        auto userRep = new UserRepository();
+        auto userinfo = userRep.findUserByUsername(username);
+        if(!userinfo){
+            userinfo = userRep.findUserByEmail(username);
+            if(!userinfo){
+                errorsArr["error"] ="user not exist";
                 view.assign("errors", errorsArr);
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-                return new Response(hb);                
-                // return new Response(request)
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent(view.render("user/login"));
+                return new Response(hb);                    
             }
-
-            auto JwtUserinfo = new JwtUserInfo();
-            JwtUserinfo.username = userinfo.username;
-            JwtUserinfo.uid = userinfo.id;
-            JwtUserinfo.nickname = userinfo.nickname;
-            JwtUserinfo.avatar = userinfo.avatar;
-
-           
-            long expireSecond = 86400;
-            if(form.remember_me == 1)
-            {
-                expireSecond= 2592000;
-            }
-            string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
-            Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
-            
-            JSONValue uinfo = toJson(JwtUserinfo);
-            string uinfostr = uinfo.toString;
-            Cookie userCookie = new Cookie("userinfo", uinfostr, expireSecond.to!int);
-           
-            string tourl = "";
-            if(!redirect_uri.empty){
-                tourl = redirect_uri;
-
-            }else{
-                tourl = url("forum.forum.list");
-            }
-            cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
-            
-            return new RedirectResponse(request, tourl)
-                            .withCookie(userCookie)
-                            .withCookie(sessionCookie);
         }
 
-        view.assign("errors", errorsArr);
-        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-        return new Response(hb);        
-        // return new Response(request)
-        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        // .setContent(view.render("user/login"));
+        string passwordInput = AuthHelper.signPassword(password,userinfo.salt);
+        if(userinfo.password != passwordInput){
+            errorsArr["error"] ="username or password validation failed";
+            view.assign("errors", errorsArr);
+            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+            return new Response(hb);                
+        }
+
+        auto JwtUserinfo = new JwtUserInfo();
+        JwtUserinfo.username = userinfo.username;
+        JwtUserinfo.uid = userinfo.id;
+        JwtUserinfo.nickname = userinfo.nickname;
+        JwtUserinfo.avatar = userinfo.avatar;
+
+        
+        long expireSecond = 86400;
+        if(form.remember_me == 1)
+        {
+            expireSecond= 2592000;
+        }
+        string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
+        Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
+        
+        JSONValue uinfo = toJson(JwtUserinfo);
+        string uinfostr = uinfo.toString;
+        Cookie userCookie = new Cookie("userinfo", uinfostr, expireSecond.to!int);
+        
+        string tourl = "";
+        if(!redirect_uri.empty){
+            tourl = redirect_uri;
+
+        }else{
+            tourl = url("forum.forum.list");
+        }
+        cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+        
+        return new RedirectResponse(request, tourl)
+                        .withCookie(userCookie)
+                        .withCookie(sessionCookie);
     }
     
     @Action Response settings(){

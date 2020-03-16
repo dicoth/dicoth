@@ -1,7 +1,7 @@
 module app.middleware.UserAuthMiddleware;
 
 import hunt.framework;
-import hunt.framework.application.MiddlewareInterface;
+// import hunt.framework.application.MiddlewareInterface;
 import hunt.framework.http.Request;
 import hunt.framework.http.Response;
 import hunt.framework.http.JsonResponse;
@@ -10,63 +10,47 @@ import app.component.user.model.User;
 import hunt.logging.ConsoleLogger;
 
 import std.algorithm.searching;
-import std.net.curl;
 import std.uri;
 
-class UserAuthMiddleware : MiddlewareInterface
-{
-    public string[] forceLoginMCA = [];
-    this()
-    {
+class UserAuthMiddleware : MiddlewareInterface {
+    string[] forceLoginMCA = [];
+    this() {
 
     }
 
-    override string name()
-    {
+    override string name() {
         return UserAuthMiddleware.stringof;
     }
 
-    void setForceLoginMCA(string[] args ...)
-    {
+    void setForceLoginMCA(string[] args...) {
         forceLoginMCA = args;
     }
 
-    override Response onProcess(Request request, Response response)
-    {
-        bool isVerify = this.verifyIsLogin();
-        logError(isVerify);
-        // if(canFind(forceLoginMCA, request.getMCA()) && isVerify == false)
-        // {
-        //     Cookie sessionCookie = new Cookie("__auth_token__", "");
-        //     Cookie userCookie = new Cookie("userinfo", "");
-        //     import hunt.framework.Simplify;
-        //     return new RedirectResponse(request, url("user.user.login")).withCookie(sessionCookie).withCookie(userCookie);
-        // }
-        import hunt.Exceptions;
-        implementationMissing(false);
-
-        if(isVerify == false)
+    override Response onProcess(Request request, Response response) {
+        bool isVerify = verifyIsLogin(request);
+        info("IsLogined: ", isVerify);
+        trace(forceLoginMCA);
+        warning(request.getMCA());
+        if(forceLoginMCA.canFind(request.getMCA()) && !isVerify)
         {
             Cookie sessionCookie = new Cookie("__auth_token__", "");
             Cookie userCookie = new Cookie("userinfo", "");
-            response.withCookie(sessionCookie).withCookie(userCookie);
-            return null;
+            tracef("Redirect..");
+            return new RedirectResponse(request, 
+                url("user.user.login")).withCookie(sessionCookie).withCookie(userCookie);
         }
+
         return null;
     }
 
-    public bool verifyIsLogin(){
+    private bool verifyIsLogin(Request request) {
         import app.lib.JwtUtil;
         import std.conv;
 
-        import hunt.Exceptions;
-        implementationMissing(false);
-        return true;
-
-        // if(JwtUtil.verify(request.cookie("__auth_token__"), config().application.secret))
-        // {
-        //     return true;
-        // }
-        // return false;
+        string token = request.cookie("__auth_token__");
+        if (JwtUtil.verify(token, config().application.secret)) {
+            return true;
+        }
+        return false;
     }
 }
