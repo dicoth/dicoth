@@ -1,6 +1,7 @@
 module app.component.system.model.User;
 
 import hunt.entity;
+import std.conv;
 
 public import app.component.system.model.UserRole;
 
@@ -41,4 +42,11 @@ class User : Model {
 
     string language;
 
+    override string toString() {
+        return "id: " ~ id.to!string ~ "email: " ~ email ~ ", name: " ~ name;
+    }
+
+    override size_t toHash() const @safe pure nothrow {
+        return id; // hashOf(email) + hashOf(created);
+    }
 }

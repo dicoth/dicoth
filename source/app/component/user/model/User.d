@@ -41,6 +41,14 @@ class User : Model
     string ip;
 
     int created;
+
+    override string toString() {
+        return username;
+    }
+
+    override size_t toHash() const @safe pure nothrow {
+        return hashOf(username) + hashOf(created);
+    }
 }
 
 class UserSession

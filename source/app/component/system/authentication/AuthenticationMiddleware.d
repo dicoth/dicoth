@@ -9,7 +9,7 @@ import app.component.system.repository.UserRepository;
 import app.component.system.model.User;
 
 // import hunt.framework.application.Controller;
-import hunt.framework.application.MiddlewareInterface;
+import hunt.framework.middleware.MiddlewareInterface;
 import hunt.framework.http.Request;
 import hunt.framework.http.Response;
 import hunt.framework.http.RedirectResponse;
@@ -40,16 +40,13 @@ class AuthenticationMiddleware : MiddlewareInterface {
 
     override Response onProcess(Request request, Response response) {
         
-        infof("path: %s, method: %s", request.path(), request.method );
-        implementationMissing(false);
-        // if(request.getMCA() == ("system.user.login") ) { 
-        //     return null;
-        // }
+        infof("path: %s, method: %s, actionId: %s", request.path(), request.method, request.actionId() );
+        if(request.actionId() == "system.user.login") { 
+            return null;
+        }
 
         string tokenString = request.header(HttpHeader.AUTHORIZATION);
-
-        logError(tokenString);
-
+        infof("tokenString: %s", tokenString);
         enum TokenHeader = "Bearer ";
         
         if(!tokenString.empty) {

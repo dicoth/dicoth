@@ -6,7 +6,7 @@ import app.component.system.repository.UserRepository;
 import app.component.system.model.User;
 
 // import hunt.framework.application.Controller;
-import hunt.framework.application.MiddlewareInterface;
+import hunt.framework.middleware.MiddlewareInterface;
 import hunt.framework.http.Request;
 import hunt.framework.http.Response;
 import hunt.framework.http.RedirectResponse;

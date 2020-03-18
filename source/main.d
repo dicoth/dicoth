@@ -41,21 +41,5 @@ void main(string[] args)
     
     app.register!AuthProvider; 
     app.register!BreadcrumbProvider; 
-
-    // initializeShiro();
-
     app.run(args);
-}
-
-void initializeShiro() {
-    import common;
-    import app.component.system.authentication.AdminCmsRealm;
-    
-
-    AdminCmsRealm realm2 = new AdminCmsRealm();
-    DefaultSecurityManager sm2 = new DefaultSecurityManager();
-    sm2.setRealm(realm2);
-    auto cacheManager2 = new MemoryConstrainedCacheManager!(Object, AuthorizationInfo)();
-    sm2.setCacheManager(cacheManager2);
-    SecurityUtils.setSecurityManager(sm2);
 }

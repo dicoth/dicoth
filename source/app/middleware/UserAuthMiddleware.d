@@ -30,8 +30,8 @@ class UserAuthMiddleware : MiddlewareInterface {
         bool isVerify = verifyIsLogin(request);
         info("IsLogined: ", isVerify);
         trace(forceLoginMCA);
-        warning(request.getMCA());
-        if(forceLoginMCA.canFind(request.getMCA()) && !isVerify)
+        warning(request.actionId());
+        if(forceLoginMCA.canFind(request.actionId()) && !isVerify)
         {
             Cookie sessionCookie = new Cookie("__auth_token__", "");
             Cookie userCookie = new Cookie("userinfo", "");
