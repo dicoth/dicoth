@@ -46,9 +46,11 @@ class User : Model
         return username;
     }
 
-    override size_t toHash() const @safe pure nothrow {
-        return hashOf(username) + hashOf(created);
-    }
+    // FIXME: Needing refactor or cleanup -@zhangxueping at 2020-03-18T19:31:43+08:00
+    // Which leads an error in /views/default/forum/forum_list.html
+    // override size_t toHash() const @safe pure nothrow {
+    //     return hashOf(username) + hashOf(created);
+    // }
 }
 
 class UserSession
