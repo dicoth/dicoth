@@ -48,12 +48,12 @@ class UserController : AdminBaseController {
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
 
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/list"));
-        return new Response(hb);
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/list"));
+        // return new Response(hb);
 
-        // return new Response(request)
-        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        // .setContent(view.render("system/user/list"));
+        return new Response()
+        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+        .setContent(view.render("system/user/list"));
     }
 
     @Action Response add()
@@ -109,12 +109,12 @@ class UserController : AdminBaseController {
         
         string lang = findLocal();
         
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
-            view.setLocale(lang).render("system/user/add"));
-        return new Response(hb);
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent(view.setLocale(lang).render("system/user/add"));
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+        //     view.setLocale(lang).render("system/user/add"));
+        // return new Response(hb);
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent(view.setLocale(lang).render("system/user/add"));
     }
 
     @Action Response edit()
@@ -174,7 +174,7 @@ class UserController : AdminBaseController {
         
 		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/edit"));
         return new Response(hb);
-        // return new Response(request)
+        // return new Response()
         //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
         //     .setContent(view.setLocale(lang).render("system/user/edit"));
     }
@@ -252,12 +252,12 @@ class UserController : AdminBaseController {
             }
         }
 
-        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/login"));
-        return new Response(hb);
+        // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/login"));
+        // return new Response(hb);
 
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent(view.render("system/user/login"));
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent(view.render("system/user/login"));
     }
 
     @Action Response logout()

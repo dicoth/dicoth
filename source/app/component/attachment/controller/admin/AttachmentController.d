@@ -45,9 +45,12 @@ class AttachmentController : AdminBaseController
         view.assign("pageModel",  data.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
 
-        HttpServerResponse r = new HttpServerResponse();
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/list"));
-        r.setBody(hb);
+        // HttpServerResponse r = new HttpServerResponse();
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/list"));
+        // r.setBody(hb);
+        // return r;
+        Response r = new Response();
+        r.setContent(view.render("attachment/attachment/list"), MimeType.TEXT_HTML_UTF_8.toString());
         return r;
     }
 
@@ -85,9 +88,12 @@ class AttachmentController : AdminBaseController
         logError(url("admin:attachment.attachment"));
         view.assign("url",url("admin:attachment.attachment"));  
         
-        HttpServerResponse r = new HttpServerResponse();
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/edit"));
-        r.setBody(hb);
+        // HttpServerResponse r = new HttpServerResponse();
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_UTF_8.toString(), view.render("attachment/attachment/edit"));
+        // r.setBody(hb);
+        // return r;
+        Response r = new Response();
+        r.setHtmlContent(view.render("attachment/attachment/edit"));
         return r;
     }
 

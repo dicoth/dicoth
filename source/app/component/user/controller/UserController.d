@@ -95,22 +95,22 @@ class UserController : BaseController
         UserVerifycodeRepository userVerifycodeRepository = new UserVerifycodeRepository();
         auto codeinfo = userVerifycodeRepository.findByAccountCode(touser,code);
         if(codeinfo is null ){
-            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, "Your email validation code is invalid");
-            return new Response(hb);
+            // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, "Your email validation code is invalid");
+            // return new Response(hb);
                        
-            // return new Response(request)
-            // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-            // .setContent("Your email validation code is invalid");
+            return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent("Your email validation code is invalid");
         }
         
         request.session().set("regaccount", touser);
-        HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
-            "<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
-        return new Response(hb);
+        // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+        //     "<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
+        // return new Response(hb);
 
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent("<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent("<script>;window.window.location.href='"~url("user.user.register")~"';</script>");
         
     } 
 
@@ -127,11 +127,11 @@ class UserController : BaseController
         writeln(cast(string)l);
         request.session().set("captcha", cast(string)l);
 
-        HttpBody hb = HttpBody.create(MimeType.IMAGE_GIF_VALUE, gif);
-        return new Response(hb);        
-        // return new Response(request)
-        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.IMAGE_GIF_VALUE.to!string)
-        // .setContent(gif);
+        // HttpBody hb = HttpBody.create(MimeType.IMAGE_GIF_VALUE, gif);
+        // return new Response(hb);        
+        return new Response()
+        .setHeader(HttpHeader.CONTENT_TYPE, MimeType.IMAGE_GIF_VALUE.to!string)
+        .setContent(gif);
     }
 
     @Action Response register(RegisterForm form)
@@ -147,21 +147,21 @@ class UserController : BaseController
                     errorMsg = error;
                     break;
                 }
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
-                    "<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
-                return new Response(hb);                
-                // return new Response(request)
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent("<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
+                // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                //     "<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
+                // return new Response(hb);                
+                return new Response()
+                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                .setContent("<script>alert('"~errorMsg~"');window.history.back(-1);</script>");
             }
             if(form.password != form.rpassword)
             {
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE,
-                    "<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
-                return new Response(hb);                
-                // return new Response(request)
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent("<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
+                // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE,
+                //     "<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
+                // return new Response(hb);                
+                return new Response()
+                .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                .setContent("<script>alert('two password entries are inconsistent!');window.history.back(-1);</script>");
             }
             string captcha = request.session().get("captcha");
             if(form.captcha == "" || captcha != form.captcha)
@@ -170,7 +170,7 @@ class UserController : BaseController
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                     "<script>alert('captcha invalid!');window.history.back(-1);</script>");
                 return new Response(hb);                
-                // return new Response(request)
+                // return new Response()
                 // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                 // .setContent("<script>alert('captcha invalid!');window.history.back(-1);</script>");
             }
@@ -180,7 +180,7 @@ class UserController : BaseController
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                     "<script>alert('This username had been existed');window.history.back(-1);</script>");
                 return new Response(hb);                
-                // return new Response(request)
+                // return new Response()
                 // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                 // .setContent("<script>alert('This username had been existed');window.history.back(-1);</script>");
             }
@@ -221,7 +221,7 @@ class UserController : BaseController
             HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                 "<script>alert('registration success!');window.window.location.href='"~url("user.user.login")~"';</script>");
             return new Response(hb);            
-            // return new Response(request)
+            // return new Response()
             // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
             // .setContent("<script>alert('registration success!');window.window.location.href='"~url("user.user.login")~"';</script>");
         }
@@ -229,7 +229,7 @@ class UserController : BaseController
         view.assign("regaccount",regaccount);
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("register"));
         return new Response(hb);        
-        // return new Response(request)
+        // return new Response()
         // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
         // .setContent(view.render("register"));
     }
@@ -329,7 +329,7 @@ class UserController : BaseController
         view.assign("userInfo",userInfo);
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/setting"));
         return new Response(hb);        
-        // return new Response(request)
+        // return new Response()
         // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
         // .setContent(view.render("user/setting"));
     }
@@ -405,7 +405,7 @@ class UserController : BaseController
         {
             HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, errorPageHtml(404));
             return new Response(hb);            
-            // return new Response(request)
+            // return new Response()
             // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
             // .setContent(errorPageHtml(404));
         }
@@ -424,7 +424,7 @@ class UserController : BaseController
         view.assign("breadcrumbs", breadcrumbsManager.generate("user.user.profile", userInfoData));
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/home"));
         return new Response(hb);
-        // return new Response(request)
+        // return new Response()
         // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
         // .setContent(view.render("user/home"));
     }
@@ -454,7 +454,7 @@ class UserController : BaseController
                     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                         "<script>alert('Wrong parameter !');window.history.back(-1);</script>");
                     return new Response(hb);                    
-                    // return new Response(request)
+                    // return new Response()
                     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                     // .setContent("<script>alert('Wrong parameter !');window.history.back(-1);</script>");       
                 }
@@ -468,7 +468,7 @@ class UserController : BaseController
                         auto UserOauthInfo = userOauthRepository.findByOauthToken(oauthToken);                        
                         if(!UserOauthInfo){
                             Cookie oauthCookie = new Cookie("__oauth_token__", oauthToken,3600);
-                            // new Response(request).withCookie(oauthCookie);
+                            // new Response().withCookie(oauthCookie);
                             string tourl = "/user/oauthlogin";
                             return new RedirectResponse(request, tourl);
                         }
@@ -477,7 +477,7 @@ class UserController : BaseController
                     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                         "<script>alert('Error hanppend !');window.history.back(-1);</script>");
                     return new Response(hb);                    
-                    // return new Response(request)
+                    // return new Response()
                     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                     // .setContent("<script>alert('Error hanppend !');window.history.back(-1);</script>");
                 }
@@ -511,7 +511,7 @@ class UserController : BaseController
                     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                         "<script>alert('Error data !');window.history.back(-1);</script>");
                     return new Response(hb);                    
-                    // return new Response(request)
+                    // return new Response()
                     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                     // .setContent("<script>alert('Error data !');window.history.back(-1);</script>");
                 }
@@ -519,7 +519,7 @@ class UserController : BaseController
             HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                 "<script>alert('"~e.msg~"');window.history.back(-1);</script>");
             return new Response(hb);            
-            // return new Response(request)
+            // return new Response()
             //         .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
             //         .setContent("<script>alert('"~e.msg~"');window.history.back(-1);</script>");
          } 
@@ -540,7 +540,7 @@ class UserController : BaseController
                 view.assign("errors", result.messages());
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
                 return new Response(hb);                
-                // return new Response(request)
+                // return new Response()
                 // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                 // .setContent(view.render("user/oauthlogin"));
             }
@@ -555,7 +555,7 @@ class UserController : BaseController
                     view.assign("errors", errorsArr);
                     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
                     return new Response(hb);                    
-                    // return new Response(request)
+                    // return new Response()
                     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                     // .setContent(view.render("user/oauthlogin"));
                     }
@@ -567,7 +567,7 @@ class UserController : BaseController
                 view.assign("errors", errorsArr);
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
                 return new Response(hb);                
-                // return new Response(request)
+                // return new Response()
                 // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                 // .setContent(view.render("user/oauthlogin"));
             }
@@ -602,7 +602,7 @@ class UserController : BaseController
                 view.assign("errors", errorsArr);
                 HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
                 return new Response(hb);                
-                // return new Response(request)
+                // return new Response()
                 // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                 // .setContent(view.render("user/login"));
             }
@@ -627,7 +627,7 @@ class UserController : BaseController
         view.assign("errors", errorsArr);
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
         return new Response(hb);        
-        // return new Response(request)
+        // return new Response()
         // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
         // .setContent(view.render("user/oauthlogin"));
         

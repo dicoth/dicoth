@@ -46,11 +46,11 @@ class SettingController : AdminBaseController {
         }  
         string lang = findLocal();
  
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/add"));
-        return new Response(hb);
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent(view.setLocale(lang).render("system/setting/add"));
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/add"));
+        // return new Response(hb);
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent(view.setLocale(lang).render("system/setting/add"));
            
     }
 
@@ -82,11 +82,11 @@ class SettingController : AdminBaseController {
 
         string lang = findLocal();
         
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/edit"));
-        return new Response(hb);
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent(view.setLocale(lang).render("system/setting/edit"));
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/edit"));
+        // return new Response(hb);
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent(view.setLocale(lang).render("system/setting/edit"));
     }
 
     @Action 
@@ -98,11 +98,11 @@ class SettingController : AdminBaseController {
         view.assign("pageModel",  alldata.getModel());
         view.assign("pageQuery", buildQueryString(request.input()));
         
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/list"));
-        return new Response(hb);
-        // return new Response(request)
-        //     .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        //     .setContent(view.render("system/setting/list"));    
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/list"));
+        // return new Response(hb);
+        return new Response()
+            .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            .setContent(view.render("system/setting/list"));    
     }
 
     @Action 

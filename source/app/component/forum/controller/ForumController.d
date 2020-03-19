@@ -32,10 +32,15 @@ class ForumController : BaseController
         auto threads = threadRepository.findNewestByForum(forums);
 
         view.assign("forums", forums);
-        
         view.assign("threads", threads);
-        
-        view.assign("hotThreads", threadRepository.hot(10));
+
+        import app.component.forum.model.Thread;
+        import app.component.user.model.User;
+        import hunt.logging.ConsoleLogger;
+
+        Thread[] ts = threadRepository.hot(10);
+        // view.assign("hotThreads", cast(Thread[])null);
+        view.assign("hotThreads", ts);
 
         auto breadcrumbs = breadcrumbsManager.generate("forum.forum.list");
         view.assign("breadcrumbs", breadcrumbs);
@@ -99,13 +104,14 @@ class ForumController : BaseController
         view.assign("breadcrumbs", breadcrumbs);
         view.assign("title", breadcrumbsToTitle(breadcrumbs));
         
-		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/forum_forum"));
+		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("forum/forum_forum"));
 
 		Response response = new Response();
-        response.withBody(hb);
+        // response.withBody(hb);
+        
+        response.header(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString());
+        response.setContent(view.render("forum/forum_forum"));
         return response;
-        // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-        // .setContent(view.render("forum/forum_forum"));
     }
     
 }
