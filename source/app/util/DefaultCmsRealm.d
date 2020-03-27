@@ -1,6 +1,6 @@
-module app.lib.DefaultCmsRealm;
+module app.util.DefaultCmsRealm;
 
-import app.lib.Exceptions;
+import app.util.Exceptions;
 import app.component.system.authentication.JwtToken;
 import app.component.system.authentication.JwtUtil;
 

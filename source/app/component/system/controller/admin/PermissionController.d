@@ -7,7 +7,7 @@ import app.component.system.model.PermissionGroup;
 import app.component.system.repository.PermissionRepository;
 import app.component.system.repository.PermissionGroupRepository;
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 
 import hunt.entity.domain;
 import hunt.framework;

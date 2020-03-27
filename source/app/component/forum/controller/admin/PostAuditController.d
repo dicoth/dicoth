@@ -1,12 +1,12 @@
 module app.component.forum.controller.admin.PostAuditController;
 
-import app.lib.PageModel;
+import app.util.PageModel;
 import app.component.forum.form.PostAuditForm;
 import app.component.forum.model.Post;
 import app.component.forum.repository.PostRepository;
 import app.component.system.controller.AdminBaseController;
 
-import app.lib.Functions;
+import app.util.Functions;
 import hunt.logging;
 import hunt.framework;
 import std.stdio;

@@ -1,4 +1,4 @@
-module app.lib.JwtUtil;
+module app.util.JwtUtil;
 
 import jwt;
 import hunt.logging.ConsoleLogger;

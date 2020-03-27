@@ -1,7 +1,7 @@
 module app.component.system.controller.admin.DashboardController;
 
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 import hunt.framework;
 import hunt.logging;
 

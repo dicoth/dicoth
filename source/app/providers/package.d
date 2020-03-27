@@ -1,4 +1,4 @@
 module app.providers;
 
-public import app.providers.BreadcrumbProvider;
-public import app.providers.AuthProvider;
+public import app.providers.DicothBreadcrumbServiceProvider;
+public import app.providers.DicothAuthServiceProvider;

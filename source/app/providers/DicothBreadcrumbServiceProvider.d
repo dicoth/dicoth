@@ -1,4 +1,4 @@
-module app.providers.BreadcrumbProvider;
+module app.providers.DicothBreadcrumbServiceProvider;
 
 
 import hunt.framework.provider.ServiceProvider;
@@ -13,7 +13,7 @@ import std.conv;
 /**
  * 
  */
-class BreadcrumbProvider : BreadcrumbServiceProvider {
+class DicothBreadcrumbServiceProvider : BreadcrumbServiceProvider {
 
     override void boot() {
 

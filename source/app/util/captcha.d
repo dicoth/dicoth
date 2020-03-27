@@ -1,4 +1,4 @@
-module app.lib.captcha;
+module app.util.captcha;
 
 import core.stdc.stdint;
 import core.stdc.string;

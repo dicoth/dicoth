@@ -1,6 +1,6 @@
 module app.task.EmailTask;
 
-import app.lib.Functions;
+import app.util.Functions;
 import hunt.framework.task.Task;
 
 class EmailTask : Task

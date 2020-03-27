@@ -1,4 +1,4 @@
-module app.lib.Exceptions;
+module app.util.Exceptions;
 
 import hunt.Exceptions;
 import hunt.shiro.Exceptions;

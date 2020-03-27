@@ -1,4 +1,4 @@
-﻿module app.lib.yun.exception;
+﻿module app.util.yun.exception;
 
 import std.exception;
 import hunt.Exceptions;

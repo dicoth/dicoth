@@ -10,11 +10,11 @@ import app.component.attachment.model.Attachment;
 import app.component.user.model.User;
 import app.component.attachment.repository.AttachmentRepository;
 import app.component.user.repository.UserRepository;
-import app.lib.PageModel;
+import app.util.PageModel;
 import app.component.system.controller.AdminBaseController;
-// import app.lib.NotFoundResponse;
+// import app.util.NotFoundResponse;
 
-import app.lib.Functions;
+import app.util.Functions;
 import std.conv;
 
 class AttachmentController : AdminBaseController
@@ -140,7 +140,7 @@ class AttachmentController : AdminBaseController
         auto file = fileRepository.find(id);
         if(file)
         {
-            import app.lib.yun.FileCloud;
+            import app.util.yun.FileCloud;
 
             auto fileCloud = new FileCloud();
             string path = fileCloud.getLocalFilePath(file.filename);

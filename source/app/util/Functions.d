@@ -1,4 +1,4 @@
-module app.lib.Functions;
+module app.util.Functions;
 
 import std.digest;
 import std.uni;

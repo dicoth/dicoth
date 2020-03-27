@@ -4,9 +4,9 @@ import hunt.framework;
 
 import app.component.user.model.User;
 import app.component.user.repository.UserRepository;
-import app.lib.PageModel;
+import app.util.PageModel;
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 
 class UserController : AdminBaseController
 {

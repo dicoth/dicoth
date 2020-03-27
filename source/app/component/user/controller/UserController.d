@@ -1,9 +1,9 @@
 module app.component.user.controller.UserController;
 
 import hunt.framework;
-import app.lib.BaseController;
+import app.util.BaseController;
 
-import app.lib.JwtUtil;
+import app.util.JwtUtil;
 import hunt.logging;
 
 import app.component.user.repository.UserRepository;
@@ -14,7 +14,7 @@ import app.component.forum.model.Thread;
 import app.component.forum.model.Post;
 import std.uri;
 import app.middleware.UserAuthMiddleware;
-import app.lib.captcha;
+import app.util.captcha;
 import app.component.user.form.RegisterForm;
 import app.component.user.form.LoginForm;
 import app.component.user.model.User;
@@ -24,7 +24,7 @@ import app.component.user.model.UserOauth;
 
 import app.component.user.repository.UserVerifycodeRepository;
 import app.component.user.repository.UserOauthRepository;
-import app.lib.Functions;
+import app.util.Functions;
 import app.component.user.form.UserinfoForm;
 import app.component.user.form.OauthLoginForm;
 import app.component.user.helper.AuthHelper;
@@ -448,7 +448,7 @@ class UserController : BaseController
     Response oauth(string code)
     {
         try{
-                import app.lib.Oauth;
+                import app.util.Oauth;
                 auto oauth = new Oauth("github");
                 if(!code){
                     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 

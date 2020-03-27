@@ -5,8 +5,8 @@ import hunt.logging;
 import hunt.http.Cookie;
 // import hunt.framework.application.BreadcrumbsManager;
 
-import app.lib.BaseController;
-import app.lib.NotFoundResponse;
+import app.util.BaseController;
+import app.util.NotFoundResponse;
 import app.middleware.UserAuthMiddleware;
 
 import app.component.attachment.repository.AttachmentRepository;
@@ -22,7 +22,7 @@ import app.component.forum.model.Post;
 
 import std.algorithm.searching;
 import std.regex;
-import app.lib.Functions;
+import app.util.Functions;
 
 import app.component.forum.form.Post;
 

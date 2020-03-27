@@ -1,8 +1,8 @@
-﻿module app.lib.yun.FileCloud;
+﻿module app.util.yun.FileCloud;
 
-import app.lib.yun.status;
-import app.lib.yun.exception;
-import app.DicothConfig;
+import app.util.yun.status;
+import app.util.yun.exception;
+import app.config.DicothConfig;
 
 import std.json;
 import std.net.curl;

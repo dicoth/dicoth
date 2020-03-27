@@ -1,4 +1,4 @@
-module app.lib.Signature;
+module app.util.Signature;
 
 import std.digest.md;
 import std.digest.sha;

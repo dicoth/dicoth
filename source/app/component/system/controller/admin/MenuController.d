@@ -7,7 +7,7 @@ import app.component.system.repository.LangPackageRepository;
 import app.component.system.repository.MenuRepository;
 import app.component.system.validation.MenuForm;
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 
 import hunt.entity.domain;
 import hunt.framework;

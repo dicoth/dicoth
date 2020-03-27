@@ -2,8 +2,8 @@ module app.component.attachment.controller.AttachmentController;
 
 import hunt.framework;
 
-import app.lib.BaseController;
-import app.lib.NotFoundResponse;
+import app.util.BaseController;
+import app.util.NotFoundResponse;
 import app.middleware.UserAuthMiddleware;
 import app.component.attachment.repository.AttachmentRepository;
 
@@ -28,7 +28,7 @@ class AttachmentController : BaseController
 
         JSONValue res;
         import hunt.framework.file.UploadedFile;
-        import app.lib.yun.FileCloud;
+        import app.util.yun.FileCloud;
         import app.component.attachment.model.Attachment;
         import std.path;
         string type = request.get("type","post");
@@ -79,7 +79,7 @@ class AttachmentController : BaseController
 
         if(file)
         {
-            import app.lib.yun.FileCloud;
+            import app.util.yun.FileCloud;
 
             auto fileCloud = new FileCloud();
             string path = fileCloud.getLocalFilePath(file.filename);
@@ -125,7 +125,7 @@ class AttachmentController : BaseController
             int curtime = cast(int)time();
             bool deletedRet = fileRepository.DelByPost(id, curtime);
             if(deletedRet){
-                import app.lib.yun.FileCloud;
+                import app.util.yun.FileCloud;
                 import std.file;
                 auto fileCloud = new FileCloud();
                 string filename = file.filename;

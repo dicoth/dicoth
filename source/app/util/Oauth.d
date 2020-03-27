@@ -1,4 +1,4 @@
-module app.lib.Oauth;
+module app.util.Oauth;
 
 import std.net.curl;
 import app.component.system.repository.SettingRepository;
@@ -7,7 +7,7 @@ import std.json;
 import std.array:split;
 import std.conv;
 import std.stdio;
-import app.lib.Functions;
+import app.util.Functions;
 
 
 class Oauth {

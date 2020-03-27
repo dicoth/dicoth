@@ -1,4 +1,4 @@
-module app.lib.JwtToken;
+module app.util.JwtToken;
 
 import hunt.shiro.authc.AuthenticationToken;
 

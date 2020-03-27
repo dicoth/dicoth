@@ -1,4 +1,4 @@
-module app.DicothConfig;
+module app.config.DicothConfig;
 
 import hunt.util.Configuration;
 

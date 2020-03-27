@@ -1,4 +1,4 @@
-module app.lib.NotFoundResponse;
+module app.util.NotFoundResponse;
 
 // import hunt.framework.http.Request;
 // import hunt.framework.http.Response;

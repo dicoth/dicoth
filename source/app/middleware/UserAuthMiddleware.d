@@ -44,7 +44,7 @@ class UserAuthMiddleware : MiddlewareInterface {
     }
 
     private bool verifyIsLogin(Request request) {
-        import app.lib.JwtUtil;
+        import app.util.JwtUtil;
         import std.conv;
 
         string token = request.cookie("__auth_token__");

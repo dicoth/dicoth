@@ -1,4 +1,4 @@
-module app.lib.PageModel;
+module app.util.PageModel;
 
 import hunt.logging;
 import hunt.entity.domain.Page;

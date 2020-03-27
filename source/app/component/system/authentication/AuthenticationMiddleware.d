@@ -1,6 +1,6 @@
 module app.component.system.authentication.AuthenticationMiddleware;
 
-import app.lib.Exceptions;
+import app.util.Exceptions;
 import app.component.system.authentication.JwtToken;
 
 import app.component.system.repository.MenuRepository;
@@ -25,7 +25,6 @@ import hunt.shiro;
 
 import std.array;
 import std.string;
-import common;
 
 import hunt.Exceptions;
 

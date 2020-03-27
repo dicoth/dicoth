@@ -4,7 +4,7 @@ import hunt.framework;
 import hunt.http.HttpMethod;
 
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 
 import app.component.forum.repository.ForumRepository;
 import app.component.forum.model.Forum;

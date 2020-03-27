@@ -1,4 +1,4 @@
-module app.lib.BaseController;
+module app.util.BaseController;
 
 import hunt.framework;
 public import std.json;
@@ -13,13 +13,13 @@ import hunt.framework.application.BreadcrumbItem;
 
 import hunt.framework.Simplify;
 import app.component.user.repository.UserRepository;
-import app.lib.JwtToken;
-import app.lib.JwtUtil;
+import app.util.JwtToken;
+import app.util.JwtUtil;
 import std.range;
 
 import hunt.logging.ConsoleLogger;
 import hunt.shiro;
-import app.lib.Exceptions;
+import app.util.Exceptions;
 public import app.middleware.UserAuthMiddleware;
 
 class BaseController : Controller

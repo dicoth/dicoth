@@ -4,7 +4,7 @@ import app.component.system.model.Menu;
 import app.component.system.model.User;
 import app.component.system.repository.MenuRepository;
 import app.component.system.repository.UserRepository;
-import app.lib.Functions;
+import app.util.Functions;
 import app.component.system.authentication.AuthenticationMiddleware;
 import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;

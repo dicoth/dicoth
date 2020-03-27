@@ -10,7 +10,7 @@ import app.component.system.repository.PermissionGroupRepository;
 import app.component.system.repository.RoleRepository;
 import app.component.system.repository.RolePermissionRepository;
 import app.component.system.controller.AdminBaseController;
-import app.lib.Functions;
+import app.util.Functions;
 
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;

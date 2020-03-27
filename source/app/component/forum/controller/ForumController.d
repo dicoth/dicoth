@@ -2,14 +2,14 @@ module app.component.forum.controller.ForumController;
 
 import hunt.framework;
 // import hunt.framework.application.BreadcrumbsManager;
-import app.lib.BaseController;
-import app.lib.NotFoundResponse;
+import app.util.BaseController;
+import app.util.NotFoundResponse;
 import app.component.forum.repository.ForumRepository;
 import app.component.forum.repository.ThreadRepository;
 import app.component.forum.repository.PostRepository;
 import app.component.user.repository.UserRepository;
 import app.component.attachment.repository.AttachmentRepository;
-import app.lib.Functions;
+import app.util.Functions;
 
 
 

@@ -1,6 +1,5 @@
-module app.providers.AuthProvider;
+module app.providers.DicothAuthServiceProvider;
 
-import common;
 import app.component.system.authentication.AdminCmsRealm;
 import hunt.framework.auth;
 
@@ -21,10 +20,9 @@ alias HuntCache = hunt.cache.Cache.Cache;
 /**
  * 
  */
-class AuthProvider : AuthServiceProvider {
-
+class DicothAuthServiceProvider : AuthServiceProvider
+{
     override void register() {
         serviceContainer().register!(AuthorizingRealm, AdminCmsRealm).newInstance;
     }
-    
 }
