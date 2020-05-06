@@ -9,6 +9,7 @@ import app.component.system.authentication.AuthenticationMiddleware;
 import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;
+import hunt.framework.i18n.I18n;
 // import hunt.framework.security.acl.Permission;
 import hunt.framework.Simplify;
 import hunt.shiro;
@@ -27,9 +28,18 @@ class AdminBaseController : Controller {
 	private string[] _alertSuccessMessages;
 	private string[] _alertErrorMessages;
 	EntityManager _cManager;
+
 	this() {
-		_cManager = entityManager();
+		_cManager = Application.instance.entityManager();
 		addMiddleware(new AuthenticationMiddleware());
+	}
+	
+    BreadcrumbsManager breadcrumbsManager() {
+        return Application.instance.breadcrumbs();
+    }
+
+	I18n translationManager() {
+		return Application.instance.translation();
 	}
 
 	override void dispose() {

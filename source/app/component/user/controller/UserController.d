@@ -60,15 +60,21 @@ class UserController : BaseController
         string code = randCode();
         string body = "Your registration code is：" ~ code;
         string subject = "Dlang Chinese Forum Registration Code";
-		auto emailTask = new EmailTask(touser, body, subject);
-        emailTask.setFinish((Task t) {
-			try {
-                string id = to!string(t.tid);
-                taskManager.del(to!size_t(id));
-			} catch (Exception e) {
-			}
-		});
-		taskManager.put(emailTask, dur!"seconds"(5));
+
+        sendMailCode(touser, body, subject);
+
+		// auto emailTask = new EmailTask(touser, body, subject);
+        // emailTask.run();
+        // emailTask.setFinish((Task t) {
+		// 	try {
+        //         string id = to!string(t.tid);
+        //         taskManager.del(to!size_t(id));
+		// 	} catch (Exception e) {
+		// 	}
+		// });
+		// taskManager.put(emailTask, dur!"seconds"(5));
+
+
         int now = cast(int) time();
         UserVerifycode userVerifycode = new UserVerifycode();
         UserVerifycodeRepository userVerifycodeRepository = new UserVerifycodeRepository();

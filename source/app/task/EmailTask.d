@@ -1,24 +1,21 @@
 module app.task.EmailTask;
 
 import app.util.Functions;
-import hunt.framework.task.Task;
+import hunt.util.Common;
 
-class EmailTask : Task
-{
-    this(string touser, string body, string subject)
-    {
+class EmailTask : Runnable {
+
+    this(string touser, string body, string subject) {
         _touser = touser;
         _body = body;
         _subject = subject;
     }
 
-    override void exec()
-    {
+    void run() {
         sendMailCode(_touser, _body, _subject);
     }
 
-    private
-    {
+    private {
         string _touser;
         string _body;
         string _subject;

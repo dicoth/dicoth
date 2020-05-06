@@ -6,10 +6,10 @@ import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;
 import app.component.user.model.User;
 import app.middleware.UserAuthMiddleware;
-import hunt.framework.application.ApplicationConfig;
+// import hunt.framework.application.ApplicationConfig;
 import hunt.util.Configuration;
 import std.uri;
-import hunt.framework.application.BreadcrumbItem;
+// import hunt.framework.application.BreadcrumbItem;
 
 import hunt.framework.Simplify;
 import app.component.user.repository.UserRepository;
@@ -29,9 +29,13 @@ class BaseController : Controller
 
     this()
     {
-		_cManager = entityManager();
+		_cManager = Application.instance.entityManager();
         // _cManager = defaultEntityManagerFactory().currentEntityManager();
         // _conf = configManager().config("hunt");
+    }
+
+    hunt.cache.Cache.Cache cache() {
+        return Application.instance.cache();
     }
 
     override bool before()
@@ -56,12 +60,16 @@ class BaseController : Controller
         return true;
     }
 
-    override bool after()
-    {
-        if(entityManager){
-            entityManager.close();
-        }
-        return true;
+    // override bool after()
+    // {
+    //     if(_cManager){
+    //         _cManager.close();
+    //     }
+    //     return true;
+    // }
+
+    BreadcrumbsManager breadcrumbsManager() {
+        return Application.instance.breadcrumbs();
     }
 
     int getUserId()

@@ -7,7 +7,7 @@ import hunt.framework;
 import app.component.system.repository.UserRepository;
 import app.component.system.repository.SettingRepository;
 import app.component.system.model.User;
-import hunt.framework.application.ApplicationConfig;
+// import hunt.framework.application.ApplicationConfig;
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.logging;
 import std.conv;
@@ -116,6 +116,9 @@ string sendMailCode(string toUser,string bodyText,string subject="D language for
         mailServer.server = mailSmtpProtocolValue~"://" ~mailSmtpHostValue;
         mailServer.username = mailSmtpUserValue;
         mailServer.password = mailSmtpPasswordValue;
+
+        // warningf("Server: %s, Name: %s, Password: %s", mailServer.server, mailServer.username, mailServer.password);
+
         auto message = new EmailMessage();
         message.to ~= toUser ;
         message.from = mailSmtpFromValue;

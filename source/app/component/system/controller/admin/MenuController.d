@@ -11,7 +11,7 @@ import app.util.Functions;
 
 import hunt.entity.domain;
 import hunt.framework;
-import hunt.framework.application.ApplicationConfig;
+// import hunt.framework.application.ApplicationConfig;
 import hunt.framework.i18n.I18n;
 import hunt.logging;
 import hunt.http.HttpMethod;

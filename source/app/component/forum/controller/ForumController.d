@@ -12,7 +12,6 @@ import app.component.attachment.repository.AttachmentRepository;
 import app.util.Functions;
 
 
-
 class ForumController : BaseController
 {
     mixin MakeController;
@@ -42,7 +41,7 @@ class ForumController : BaseController
         // view.assign("hotThreads", cast(Thread[])null);
         view.assign("hotThreads", ts);
 
-        auto breadcrumbs = breadcrumbsManager.generate("forum.forum.list");
+        auto breadcrumbs =  breadcrumbsManager.generate("forum.forum.list");
         view.assign("breadcrumbs", breadcrumbs);
         view.assign("title", breadcrumbsToTitle(breadcrumbs));
 

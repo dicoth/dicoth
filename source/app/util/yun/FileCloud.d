@@ -15,7 +15,6 @@ import std.base64;
 import std.conv;
 import std.string;
 import hunt.logging;
-import hunt.framework.application.ApplicationConfig;
 import hunt.util.Configuration;
 import std.stdio;
 import hunt.framework.file.UploadedFile;

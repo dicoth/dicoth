@@ -4,6 +4,7 @@ module app.providers.DicothBreadcrumbServiceProvider;
 import hunt.framework.provider.ServiceProvider;
 import hunt.framework.provider.BreadcrumbServiceProvider;
 import hunt.framework.application;
+import hunt.framework.breadcrumb;
 import hunt.framework.Simplify;
 
 import hunt.logging.ConsoleLogger;
