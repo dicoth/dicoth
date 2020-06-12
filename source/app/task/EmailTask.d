@@ -1,7 +1,7 @@
 module app.task.EmailTask;
 
 import app.util.Functions;
-import hunt.util.Common;
+import hunt.util.Runnable;
 
 class EmailTask : Runnable {
 
