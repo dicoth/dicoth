@@ -3,7 +3,7 @@ module app.component.forum.controller.ForumController;
 import hunt.framework;
 // import hunt.framework.application.BreadcrumbsManager;
 import app.util.BaseController;
-import app.util.NotFoundResponse;
+// import app.util.NotFoundResponse;
 import app.component.forum.repository.ForumRepository;
 import app.component.forum.repository.ThreadRepository;
 import app.component.forum.repository.PostRepository;
@@ -18,8 +18,8 @@ class ForumController : BaseController
 
     this() {
         super();
-        auto middle = new UserAuthMiddleware();
-        this.addMiddleware(middle);
+        // auto middle = new UserAuthMiddleware();
+        // this.addMiddleware(new JwtAuthMiddleware());
     }
 
     @Action

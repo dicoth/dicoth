@@ -1,26 +1,37 @@
 module app.util.BaseController;
 
-import hunt.framework;
-public import std.json;
-import hunt.http.HttpMethod;
-import hunt.entity.DefaultEntityManagerFactory;
-import app.component.user.model.User;
-import app.middleware.UserAuthMiddleware;
-// import hunt.framework.application.ApplicationConfig;
-import hunt.util.Configuration;
-import std.uri;
-// import hunt.framework.application.BreadcrumbItem;
 
-import hunt.framework.Simplify;
 import app.component.user.repository.UserRepository;
-import app.util.JwtToken;
-import app.util.JwtUtil;
-import std.range;
+import app.component.user.model.User;
+import app.util.Exceptions;
 
+import jwt;
+
+// import app.util.JwtToken;
+// import app.util.JwtUtil;
+
+import hunt.framework;
+import hunt.entity.DefaultEntityManagerFactory;
+import hunt.http.HttpMethod;
 import hunt.logging.ConsoleLogger;
 import hunt.shiro;
-import app.util.Exceptions;
-public import app.middleware.UserAuthMiddleware;
+import hunt.util.Configuration;
+import hunt.util.Serialize;
+
+public import std.json;
+import std.conv;
+import std.uri;
+import std.range;
+
+
+class JwtUserInfo
+{
+    string nickname;
+    int uid;
+    string username;
+    string avatar;
+}
+
 
 class BaseController : Controller
 {
@@ -45,19 +56,49 @@ class BaseController : Controller
         view.assign("passport_profile", "/settings");
         view.assign("author", "DLang Chinese Forum");
         view.assign("keywords", "DLang,D语言,Hunt-Framework,DLangchina,DLang中文论坛");
-        string tokenString = request.header(HttpHeader.AUTHORIZATION);
-        if(tokenString.empty)
-        {
-            tokenString = request.cookie("__auth_token__");
-        }
+         string tokenString = request().auth().token();
+        // string tokenString = request.header(HttpHeader.AUTHORIZATION);
+        // if(tokenString.empty)
+        // {
+        //     tokenString = request.cookie("__auth_token__");
+        // }
 
         info("tokenString=>", tokenString);
 
         if(!tokenString.empty) {
-            auto baseUserInfo = JwtUtil.getInfo(tokenString);
+            auto baseUserInfo = getInfo(tokenString);
             view.assign("session_user",baseUserInfo);
         }
         return true;
+    }
+
+    static JwtUserInfo getInfo(string token) {
+        JwtUserInfo userInfo;
+        try {
+            Token tk = jwt.decode(token);
+            // Claims userClaims = tk.claims();
+
+            string jStr = tk.claims().json();
+            warning("claims: ", jStr);
+            // return toObject!JwtUserInfo(parseJSON(jStr));
+
+            userInfo = new JwtUserInfo();
+            userInfo.username = tk.claims().sub();
+            userInfo.avatar = tk.claims().get("avatar");
+            string uid = tk.claims().get("user_id");
+            if(!uid.empty) {
+                try {
+                    userInfo.uid = uid.to!int;
+                } catch(Exception ex) {
+                    warning(ex.msg);
+                }
+            }
+            return userInfo;
+
+        } catch (Exception e) {
+            warning(e);
+            return null;
+        }
     }
 
     // override bool after()
@@ -74,14 +115,7 @@ class BaseController : Controller
 
     int getUserId()
     {
-        string jwttoken = request.cookie("__auth_token__");
-        auto baseUserInfo = JwtUtil.getInfo(jwttoken);
-        if(baseUserInfo !is null){
-            return  baseUserInfo.uid;
-        }else{
-            return  0;
-        }
-
+        return cast(int)request.auth().user().id();
     }
 
     string breadcrumbsToTitle(BreadcrumbItem[] items)

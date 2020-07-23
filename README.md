@@ -15,8 +15,15 @@ You need edit config item for your project, http port, database information and 
 vim config/application.conf
 ```
 
-### Runt Dicoth
+### Run Dicoth
 ```sh
 cd dicoth/
-dub run -v
+dub run
+```
+
+### Administrate
+```
+Url: http://127.0.0.1/admin/
+Administrator: admin@putao.com
+Password: admin
 ```

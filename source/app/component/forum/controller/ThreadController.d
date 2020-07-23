@@ -6,7 +6,7 @@ import hunt.http.Cookie;
 // import hunt.framework.application.BreadcrumbsManager;
 
 import app.util.BaseController;
-import app.util.NotFoundResponse;
+// import app.util.NotFoundResponse;
 import app.middleware.UserAuthMiddleware;
 
 import app.component.attachment.repository.AttachmentRepository;
@@ -36,9 +36,10 @@ class ThreadController : BaseController
 
     this() {
         super();
-        auto middle = new UserAuthMiddleware();
-        middle.setForceLoginMCA(["forum.thread.create", "forum.thread.editpage", "forum.thread.edit", "forum.thread.reply"]);
-        this.addMiddleware(middle);
+        // auto middle = new UserAuthMiddleware();
+        // middle.setForceLoginMCA(["forum.thread.create", "forum.thread.editpage", "forum.thread.edit", "forum.thread.reply"]);
+        // this.addMiddleware(middle);
+        this.addMiddleware(new JwtAuthMiddleware());
     }
 
     @Action

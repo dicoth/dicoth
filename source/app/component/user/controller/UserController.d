@@ -1,9 +1,12 @@
 module app.component.user.controller.UserController;
 
-import hunt.framework;
+import app.task.EmailTask;
 import app.util.BaseController;
-
+import app.util.captcha;
+import app.util.Functions;
 import app.util.JwtUtil;
+
+import hunt.framework;
 import hunt.logging;
 
 import app.component.user.repository.UserRepository;
@@ -12,9 +15,7 @@ import app.component.forum.repository.ThreadRepository;
 import app.component.forum.repository.ForumRepository;
 import app.component.forum.model.Thread;
 import app.component.forum.model.Post;
-import std.uri;
-import app.middleware.UserAuthMiddleware;
-import app.util.captcha;
+// import app.middleware.UserAuthMiddleware;
 import app.component.user.form.RegisterForm;
 import app.component.user.form.LoginForm;
 import app.component.user.model.User;
@@ -24,7 +25,6 @@ import app.component.user.model.UserOauth;
 
 import app.component.user.repository.UserVerifycodeRepository;
 import app.component.user.repository.UserOauthRepository;
-import app.util.Functions;
 import app.component.user.form.UserinfoForm;
 import app.component.user.form.OauthLoginForm;
 import app.component.user.helper.AuthHelper;
@@ -36,8 +36,8 @@ import std.stdio;
 import std.conv;
 import std.range;
 import std.typecons;
+import std.uri;
 import core.time;
-import app.task.EmailTask;
 
 class UserController : BaseController
 {
@@ -45,9 +45,9 @@ class UserController : BaseController
 
     this() {
         super();
-        auto middle = new UserAuthMiddleware();
-        middle.setForceLoginMCA(["user.user.editPassword", "user.user.settings", "user.user.editprofile", "user.user.logout"]);
-        this.addMiddleware(middle);
+        // auto middle = new UserAuthMiddleware();
+        // middle.setForceLoginMCA(["user.user.editPassword", "user.user.settings", "user.user.editprofile", "user.user.logout"]);
+        // this.addMiddleware(middle);
     }
 
     @Action string sendCode(){ 
@@ -274,59 +274,96 @@ class UserController : BaseController
         }
         string username = form.username;
         string password = form.password;
-        auto userRep = new UserRepository();
-        auto userinfo = userRep.findUserByUsername(username);
-        if(!userinfo){
-            userinfo = userRep.findUserByEmail(username);
-            if(!userinfo){
-                errorsArr["error"] ="user not exist";
-                view.assign("errors", errorsArr);
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-                return new Response(hb);                    
-            }
-        }
+        bool rememeber = form.remember_me > 0;
 
-        string passwordInput = AuthHelper.signPassword(password,userinfo.salt);
-        if(userinfo.password != passwordInput){
-            errorsArr["error"] ="username or password validation failed";
+
+        Identity authUser = this.request.auth().signIn(username, password, rememeber, AuthenticationScheme.Bearer);
+        
+        string msg;
+        if(authUser.isAuthenticated()) {
+            // long expireSecond = 86400;
+            // if(rememeber)
+            // {
+            //     expireSecond= config().auth.tokenExpiration;
+            // }
+            // string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
+            // Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
+            
+            // JSONValue uinfo = toJson(JwtUserinfo);
+            // string uinfostr = uinfo.toString;
+            // Cookie userCookie = new Cookie("userinfo", uinfostr, expireSecond.to!int);
+            
+            string tourl = "";
+            if(!redirect_uri.empty){
+                tourl = redirect_uri;
+
+            }else{
+                tourl = url("forum.forum.list");
+            }
+            // cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+            
+            return new RedirectResponse(request, tourl);
+        } else {
+            errorsArr["error"] ="Invalid username or password";
             view.assign("errors", errorsArr);
             HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-            return new Response(hb);                
+            return new Response(hb);   
         }
 
-        auto JwtUserinfo = new JwtUserInfo();
-        JwtUserinfo.username = userinfo.username;
-        JwtUserinfo.uid = userinfo.id;
-        JwtUserinfo.nickname = userinfo.nickname;
-        JwtUserinfo.avatar = userinfo.avatar;
+        // auto userRep = new UserRepository();
+        // auto userinfo = userRep.findUserByUsername(username);
+        // if(!userinfo){
+        //     userinfo = userRep.findUserByEmail(username);
+        //     if(!userinfo){
+        //         errorsArr["error"] ="user not exist";
+        //         view.assign("errors", errorsArr);
+        //         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+        //         return new Response(hb);                    
+        //     }
+        // }
+
+        // string passwordInput = AuthHelper.signPassword(password,userinfo.salt);
+        // if(userinfo.password != passwordInput){
+        //     errorsArr["error"] ="username or password validation failed";
+        //     view.assign("errors", errorsArr);
+        //     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+        //     return new Response(hb);                
+        // }
+
+        // auto JwtUserinfo = new JwtUserInfo();
+        // JwtUserinfo.username = userinfo.username;
+        // JwtUserinfo.uid = userinfo.id;
+        // JwtUserinfo.nickname = userinfo.nickname;
+        // JwtUserinfo.avatar = userinfo.avatar;
 
         
-        long expireSecond = 86400;
-        if(form.remember_me == 1)
-        {
-            expireSecond= 2592000;
-        }
-        string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
-        Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
+        // long expireSecond = 86400;
+        // if(form.remember_me == 1)
+        // {
+        //     expireSecond= 2592000;
+        // }
+        // string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
+        // Cookie sessionCookie = new Cookie("__auth_token__", tokenString, expireSecond.to!int);
         
-        JSONValue uinfo = toJson(JwtUserinfo);
-        string uinfostr = uinfo.toString;
-        Cookie userCookie = new Cookie("userinfo", uinfostr, expireSecond.to!int);
+        // JSONValue uinfo = toJson(JwtUserinfo);
+        // string uinfostr = uinfo.toString;
+        // Cookie userCookie = new Cookie("userinfo", uinfostr, expireSecond.to!int);
         
-        string tourl = "";
-        if(!redirect_uri.empty){
-            tourl = redirect_uri;
+        // string tourl = "";
+        // if(!redirect_uri.empty){
+        //     tourl = redirect_uri;
 
-        }else{
-            tourl = url("forum.forum.list");
-        }
-        cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+        // }else{
+        //     tourl = url("forum.forum.list");
+        // }
+        // cache().set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
         
-        return new RedirectResponse(request, tourl)
-                        .withCookie(userCookie)
-                        .withCookie(sessionCookie);
+        // return new RedirectResponse(request, tourl)
+        //                 .withCookie(userCookie)
+        //                 .withCookie(sessionCookie);
     }
     
+    @Middleware(JwtAuthMiddleware.stringof)
     @Action Response settings(){
 
         int userid = this.getUserId();
@@ -340,6 +377,7 @@ class UserController : BaseController
         // .setContent(view.render("user/setting"));
     }
     
+    @Middleware(JwtAuthMiddleware.stringof)
     @Action string editprofile(UserinfoForm form){
 
         auto result = form.valid();
@@ -368,7 +406,7 @@ class UserController : BaseController
         return "1";
     }
 
-    
+    @Middleware(JwtAuthMiddleware.stringof)
     @Action string editPassword(){
 
         string current_password = request.post("current_password");
@@ -409,8 +447,7 @@ class UserController : BaseController
         auto userInfoData = userRepository.findUserInfo(id);    
         if (!userInfoData)
         {
-            HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, errorPageHtml(404));
-            return new Response(hb);            
+            return new NotFoundResponse();            
             // return new Response()
             // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
             // .setContent(errorPageHtml(404));
@@ -435,19 +472,28 @@ class UserController : BaseController
         // .setContent(view.render("user/home"));
     }
 
+    @Middleware(JwtAuthMiddleware.stringof)
     @Action Response logout()
     {
+        Identity currentUser = this.request.auth().user();
+        if(currentUser.isAuthenticated()) {
+            string name = currentUser.name();
+            this.request().auth().signOut();
+            version(HUNT_DEBUG) info("The user [" ~ name ~ "] has logged out.");
+        } else {
+            version(HUNT_DEBUG) warning("No user logged in.");
+        }
 
-        
-        Cookie sessionCookieToken = new Cookie("__auth_token__","",0);
-        Cookie sessionCookieUser = new Cookie("userinfo","",0);
-        Cookie sessionCookieSession = new Cookie("hunt_session","",0);
+        return new RedirectResponse(this.request(), "/");
 
-        return new RedirectResponse(this.request(), "/")
-                .withCookie(sessionCookieToken)
-                .withCookie(sessionCookieUser)
-                .withCookie(sessionCookieSession);
-        
+        // Cookie sessionCookieToken = new Cookie("__auth_token__","",0);
+        // Cookie sessionCookieUser = new Cookie("userinfo","",0);
+        // Cookie sessionCookieSession = new Cookie("hunt_session","",0);
+
+        // return new RedirectResponse(this.request(), "/")
+        //         .withCookie(sessionCookieToken)
+        //         .withCookie(sessionCookieUser)
+        //         .withCookie(sessionCookieSession);
     }
    
     @Action
@@ -464,63 +510,68 @@ class UserController : BaseController
                     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
                     // .setContent("<script>alert('Wrong parameter !');window.history.back(-1);</script>");       
                 }
+
+                import hunt.Exceptions;
+                implementationMissing(false);
+                string tourl = "/user/oauthlogin";
+                return new RedirectResponse(request, tourl);
          
-                JSONValue oauthUserInfo = oauth.get_user_info(code);    
-                string oauthToken = oauthUserInfo["id"].to!string;
-                auto userOauthRepository = new UserOauthRepository(_cManager);
-                auto userRep = new UserRepository();
-                int uid;
-                if(oauthToken){
-                        auto UserOauthInfo = userOauthRepository.findByOauthToken(oauthToken);                        
-                        if(!UserOauthInfo){
-                            Cookie oauthCookie = new Cookie("__oauth_token__", oauthToken,3600);
-                            // new Response().withCookie(oauthCookie);
-                            string tourl = "/user/oauthlogin";
-                            return new RedirectResponse(request, tourl);
-                        }
-                        uid = UserOauthInfo.uid;
-                }else{
-                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
-                        "<script>alert('Error hanppend !');window.history.back(-1);</script>");
-                    return new Response(hb);                    
-                    // return new Response()
-                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    // .setContent("<script>alert('Error hanppend !');window.history.back(-1);</script>");
-                }
+                // JSONValue oauthUserInfo = oauth.get_user_info(code);    
+                // string oauthToken = oauthUserInfo["id"].to!string;
+                // auto userOauthRepository = new UserOauthRepository(_cManager);
+                // auto userRep = new UserRepository();
+                // int uid;
+                // if(oauthToken){
+                //         auto UserOauthInfo = userOauthRepository.findByOauthToken(oauthToken);                        
+                //         if(!UserOauthInfo){
+                //             Cookie oauthCookie = new Cookie("__oauth_token__", oauthToken,3600);
+                //             // new Response().withCookie(oauthCookie);
+                //             string tourl = "/user/oauthlogin";
+                //             return new RedirectResponse(request, tourl);
+                //         }
+                //         uid = UserOauthInfo.uid;
+                // }else{
+                //     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                //         "<script>alert('Error hanppend !');window.history.back(-1);</script>");
+                //     return new Response(hb);                    
+                //     // return new Response()
+                //     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                //     // .setContent("<script>alert('Error hanppend !');window.history.back(-1);</script>");
+                // }
 
-                auto userinfo = userRep.findUserInfo(uid);
-                if(userinfo){
-                    auto JwtUserinfo = new JwtUserInfo();
-                    JwtUserinfo.username = userinfo.username;
-                    JwtUserinfo.uid = uid;
-                    JwtUserinfo.nickname = userinfo.nickname;
-                    JwtUserinfo.avatar = userinfo.avatar;
+                // auto userinfo = userRep.findUserInfo(uid);
+                // if(userinfo){
+                //     auto JwtUserinfo = new JwtUserInfo();
+                //     JwtUserinfo.username = userinfo.username;
+                //     JwtUserinfo.uid = uid;
+                //     JwtUserinfo.nickname = userinfo.nickname;
+                //     JwtUserinfo.avatar = userinfo.avatar;
                     
-                    long expireSecond = 86400;
+                //     long expireSecond = 86400;
                     
-                    string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
-                    Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
+                //     string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
+                //     Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
                     
-                    JSONValue uinfo = toJson(JwtUserinfo);
-                    string uinfostr = uinfo.toString;
-                    Cookie userCookie = new Cookie("userinfo", uinfostr);
+                //     JSONValue uinfo = toJson(JwtUserinfo);
+                //     string uinfostr = uinfo.toString;
+                //     Cookie userCookie = new Cookie("userinfo", uinfostr);
                     
-                    string tourl = "";
-                    tourl = url("forum.forum.list");
+                //     string tourl = "";
+                //     tourl = url("forum.forum.list");
 
-                    cache().set("user_login_token_"~uid.to!string, tokenString, cast(uint)expireSecond);
+                //     cache().set("user_login_token_"~uid.to!string, tokenString, cast(uint)expireSecond);
                     
-                    return new RedirectResponse(request, tourl)
-                                    .withCookie(userCookie)
-                                    .withCookie(sessionCookie);
-                }else{
-                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
-                        "<script>alert('Error data !');window.history.back(-1);</script>");
-                    return new Response(hb);                    
-                    // return new Response()
-                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    // .setContent("<script>alert('Error data !');window.history.back(-1);</script>");
-                }
+                //     return new RedirectResponse(request, tourl)
+                //                     .withCookie(userCookie)
+                //                     .withCookie(sessionCookie);
+                // }else{
+                //     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
+                //         "<script>alert('Error data !');window.history.back(-1);</script>");
+                //     return new Response(hb);                    
+                //     // return new Response()
+                //     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+                //     // .setContent("<script>alert('Error data !');window.history.back(-1);</script>");
+                // }
         }catch(Exception e){
             HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
                 "<script>alert('"~e.msg~"');window.history.back(-1);</script>");
@@ -553,82 +604,82 @@ class UserController : BaseController
             string username = form.username;
             string password = form.password;
             auto userRep = new UserRepository();
-            auto userinfo = userRep.findUserByUsername(username);
-            if(!userinfo){
-                userinfo = userRep.findUserByEmail(username);
-                if(!userinfo){
-                    errorsArr["error"] ="user not exist";
-                    view.assign("errors", errorsArr);
-                    HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
-                    return new Response(hb);                    
-                    // return new Response()
-                    // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                    // .setContent(view.render("user/oauthlogin"));
-                    }
-                }
+            // auto userinfo = userRep.findUserByUsername(username);
+            // if(!userinfo){
+            //     userinfo = userRep.findUserByEmail(username);
+            //     if(!userinfo){
+            //         errorsArr["error"] ="user not exist";
+            //         view.assign("errors", errorsArr);
+            //         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+            //         return new Response(hb);                    
+            //         // return new Response()
+            //         // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //         // .setContent(view.render("user/oauthlogin"));
+            //         }
+            //     }
 
-            string passwordInput = AuthHelper.signPassword(password,userinfo.salt);//userRep.createPassword(password,userinfo.salt);
-            if(userinfo.password != passwordInput){
-                errorsArr["error"] ="username or password validation failed";
-                view.assign("errors", errorsArr);
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
-                return new Response(hb);                
-                // return new Response()
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent(view.render("user/oauthlogin"));
-            }
+            // string passwordInput = AuthHelper.signPassword(password,userinfo.salt);//userRep.createPassword(password,userinfo.salt);
+            // if(userinfo.password != passwordInput){
+            //     errorsArr["error"] ="username or password validation failed";
+            //     view.assign("errors", errorsArr);
+            //     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));
+            //     return new Response(hb);                
+            //     // return new Response()
+            //     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //     // .setContent(view.render("user/oauthlogin"));
+            // }
 
-            auto JwtUserinfo = new JwtUserInfo();
-            JwtUserinfo.username = userinfo.username;//username;
-            JwtUserinfo.uid = userinfo.id;
-            JwtUserinfo.nickname = userinfo.nickname;
-            JwtUserinfo.avatar = userinfo.avatar;
-
-            
-            long expireSecond = 86400;
-            if(form.remember_me == 1)
-            {
-                expireSecond= 2592000;
-            }
-            string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
-            Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
-            
-            JSONValue uinfo = toJson(JwtUserinfo);
-            string uinfostr = uinfo.toString;
-            Cookie userCookie = new Cookie("userinfo", uinfostr);
-            
-            string tourl = "";
-            tourl = url("forum.forum.list");
-            
-            this.cache.set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
-            
-            string oauth_token = request.cookie("__oauth_token__");
-            if(!oauth_token){
-                errorsArr["error"] ="Your github token has been expired";
-                view.assign("errors", errorsArr);
-                HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
-                return new Response(hb);                
-                // return new Response()
-                // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
-                // .setContent(view.render("user/login"));
-            }
-            
+            // auto JwtUserinfo = new JwtUserInfo();
+            // JwtUserinfo.username = userinfo.username;//username;
+            // JwtUserinfo.uid = userinfo.id;
+            // JwtUserinfo.nickname = userinfo.nickname;
+            // JwtUserinfo.avatar = userinfo.avatar;
 
             
-            auto curtime = cast(int)time();
-            auto userOauthModel = new UserOauth();
-            userOauthModel.uid = userinfo.id;
-            userOauthModel.oauth_token = oauth_token;
-            userOauthModel.flag = 1;
-            userOauthModel.created = curtime;
-            userOauthModel.updated = curtime;
-            auto userOauthRepository = new UserOauthRepository(_cManager);
-            userOauthRepository.insert(userOauthModel);
+            // long expireSecond = 86400;
+            // if(form.remember_me == 1)
+            // {
+            //     expireSecond= 2592000;
+            // }
+            // string tokenString = JwtUtil.sign(JwtUserinfo, config().application.secret, expireSecond);
+            // Cookie sessionCookie = new Cookie("__auth_token__", tokenString);
+            
+            // JSONValue uinfo = toJson(JwtUserinfo);
+            // string uinfostr = uinfo.toString;
+            // Cookie userCookie = new Cookie("userinfo", uinfostr);
+            
+            // string tourl = "";
+            // tourl = url("forum.forum.list");
+            
+            // this.cache.set("user_login_token_"~userinfo.id.to!string, tokenString, cast(uint)expireSecond);
+            
+            // string oauth_token = request.cookie("__oauth_token__");
+            // if(!oauth_token){
+            //     errorsArr["error"] ="Your github token has been expired";
+            //     view.assign("errors", errorsArr);
+            //     HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/login"));
+            //     return new Response(hb);                
+            //     // return new Response()
+            //     // .setHeader(HttpHeader.CONTENT_TYPE, MimeType.TEXT_HTML_UTF_8.asString())
+            //     // .setContent(view.render("user/login"));
+            // }
+            
+
+            
+            // auto curtime = cast(int)time();
+            // auto userOauthModel = new UserOauth();
+            // userOauthModel.uid = userinfo.id;
+            // userOauthModel.oauth_token = oauth_token;
+            // userOauthModel.flag = 1;
+            // userOauthModel.created = curtime;
+            // userOauthModel.updated = curtime;
+            // auto userOauthRepository = new UserOauthRepository(_cManager);
+            // userOauthRepository.insert(userOauthModel);
             
             
-            return new RedirectResponse(request, tourl)
-                            .withCookie(userCookie)
-                            .withCookie(sessionCookie);
+            // return new RedirectResponse(request, tourl)
+            //                 .withCookie(userCookie)
+            //                 .withCookie(sessionCookie);
         }
         view.assign("errors", errorsArr);
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("user/oauthlogin"));

@@ -2,9 +2,8 @@ module app.component.system.authentication.AdminCmsRealm;
 
 
 import app.util.Exceptions;
-import app.component.system.authentication.JwtToken;
-import app.component.system.authentication.JwtUtil;
-
+// import app.component.system.authentication.JwtToken;
+// import app.component.system.authentication.JwtUtil;
 
 import app.component.system.helper.Password;
 import app.component.system.model.User;
@@ -26,6 +25,8 @@ import hunt.entity;
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.logging.ConsoleLogger;
 import hunt.String;
+
+import hunt.framework.auth;
 import hunt.framework.Simplify;
 
 alias PermissionModel = app.component.system.model.Permission.Permission;

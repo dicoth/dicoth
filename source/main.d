@@ -5,6 +5,7 @@ import app.component.system.repository.LangPackageRepository;
 import app.component.system.repository.LanguageRepository;
 
 import hunt.framework;
+import hunt.logging.ConsoleLogger;
 
 void main(string[] args)
 {
@@ -22,7 +23,19 @@ void main(string[] args)
     //     i18n.merge(key, oneArray);
     // }
     
-    app.register!DicothAuthServiceProvider; 
+    app.register!DicothUserServiceProvider; 
     app.register!DicothBreadcrumbServiceProvider; 
+
+    app.onBooted(() {
+        TypeInfo_Class[string] all = MiddlewareInterface.all();
+        foreach(string key, TypeInfo_Class typeInfo; all) {
+            infof("Registed middleware: %s => %s", key, typeInfo.toString());
+        }
+        // app.route().get("index.about").withoutMiddleware!(JwtAuthMiddleware)();
+
+        // app.route().group("admin").withMiddleware(JwtAuthMiddleware.stringof);
+        // app.route().group("admin").get("index.test").withoutMiddleware(JwtAuthMiddleware.stringof);        
+    });    
+
     app.run(args);
 }

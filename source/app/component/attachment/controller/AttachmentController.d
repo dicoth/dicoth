@@ -3,7 +3,7 @@ module app.component.attachment.controller.AttachmentController;
 import hunt.framework;
 
 import app.util.BaseController;
-import app.util.NotFoundResponse;
+// import app.util.NotFoundResponse;
 import app.middleware.UserAuthMiddleware;
 import app.component.attachment.repository.AttachmentRepository;
 
@@ -18,9 +18,9 @@ class AttachmentController : BaseController
 
     this() {
         super();
-        auto middle = new UserAuthMiddleware();
-        middle.setForceLoginMCA(["attachment.attachment.upload","attachment.attachment.deleteFile"]);
-        this.addMiddleware(middle);
+        // auto middle = new UserAuthMiddleware();
+        // middle.setForceLoginMCA(["attachment.attachment.upload","attachment.attachment.deleteFile"]);
+        // this.addMiddleware(middle);
     }
 
 

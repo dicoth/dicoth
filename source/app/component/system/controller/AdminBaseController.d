@@ -9,12 +9,12 @@ import app.component.system.authentication.AuthenticationMiddleware;
 import hunt.http.HttpMethod;
 import hunt.entity.DefaultEntityManagerFactory;
 import hunt.framework;
-import hunt.framework.i18n.I18n;
+// import hunt.framework.i18n.I18n;
 // import hunt.framework.security.acl.Permission;
-import hunt.framework.Simplify;
+// import hunt.framework.Simplify;
 import hunt.shiro;
-import app.component.system.authentication.JwtToken;
-import app.component.system.authentication.JwtUtil;
+// import app.component.system.authentication.JwtToken;
+// import app.component.system.authentication.JwtUtil;
 public import std.algorithm;
 public import std.conv;
 public import std.json;
@@ -31,7 +31,7 @@ class AdminBaseController : Controller {
 
 	this() {
 		_cManager = Application.instance.entityManager();
-		addMiddleware(new AuthenticationMiddleware());
+		addMiddleware(new JwtAuthMiddleware());
 	}
 	
     BreadcrumbsManager breadcrumbsManager() {
