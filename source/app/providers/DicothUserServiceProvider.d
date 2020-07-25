@@ -2,8 +2,8 @@ module app.providers.DicothUserServiceProvider;
 
 import app.data.DicothUserService;
 
-import hunt.framework.provider.UserServiceProvider;
-import hunt.framework.auth.UserService;
+import hunt.framework.provider;
+import hunt.framework.auth;
 
 import hunt.logging.ConsoleLogger;
 import poodinis;

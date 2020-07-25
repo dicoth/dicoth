@@ -1,4 +1,33 @@
-module app.middleware.AuthenticationMiddleware;
+module app.middleware.AdminAuthMiddleware;
+
+import app.auth;
+import hunt.framework;
+
+import std.range;
+
+
+enum string ADMIN_AUTH_COOKIE_NAME = "__admin_jwt_token__";
+
+
+class AdminAuthMiddleware : JwtAuthMiddleware {
+    shared static this() {
+        MiddlewareInterface.register!(typeof(this));
+    }
+
+    override protected JwtToken getToken(Request request) {
+        string tokenString = request.bearerToken();
+
+        if(tokenString.empty)
+            tokenString = request.cookie(ADMIN_AUTH_COOKIE_NAME);
+
+        if(tokenString.empty)
+            return null;
+        // return new AdminJwtToken(tokenString);
+        
+        return new JwtToken(tokenString, "admin-jwt-token");
+    }
+}
+
 
 // import app.component.system.repository.MenuRepository;
 // import app.component.system.repository.UserRepository;

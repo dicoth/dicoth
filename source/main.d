@@ -23,7 +23,8 @@ void main(string[] args)
     //     i18n.merge(key, oneArray);
     // }
     
-    app.register!DicothUserServiceProvider; 
+    // app.register!DicothUserServiceProvider; 
+    app.register!DicothAuthServiceProvider; 
     app.register!DicothBreadcrumbServiceProvider; 
 
     app.onBooted(() {

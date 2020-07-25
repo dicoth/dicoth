@@ -1,10 +1,13 @@
 module app.component.user.controller.UserController;
 
+import app.auth;
+import app.middleware;
+
 import app.task.EmailTask;
 import app.util.BaseController;
 import app.util.captcha;
 import app.util.Functions;
-import app.util.JwtUtil;
+// import app.util.JwtUtil;
 
 import hunt.framework;
 import hunt.logging;
@@ -276,8 +279,12 @@ class UserController : BaseController
         string password = form.password;
         bool rememeber = form.remember_me > 0;
 
+        import app.data.DicothUserService;
+        UserService userService = new DicothUserService();
+        string salt = userService.getSalt(username, password);
 
-        Identity authUser = this.request.auth().signIn(username, password, rememeber, AuthenticationScheme.Bearer);
+        Identity authUser = this.request.auth().signIn(username, password, salt,
+            rememeber, USER_BASIC_TOKEN_NAME, AuthenticationScheme.Bearer);
         
         string msg;
         if(authUser.isAuthenticated()) {
@@ -363,7 +370,7 @@ class UserController : BaseController
         //                 .withCookie(sessionCookie);
     }
     
-    @Middleware(JwtAuthMiddleware.stringof)
+    @Middleware(UserAuthMiddleware.stringof)
     @Action Response settings(){
 
         int userid = this.getUserId();
@@ -377,7 +384,7 @@ class UserController : BaseController
         // .setContent(view.render("user/setting"));
     }
     
-    @Middleware(JwtAuthMiddleware.stringof)
+    @Middleware(UserAuthMiddleware.stringof)
     @Action string editprofile(UserinfoForm form){
 
         auto result = form.valid();
@@ -406,7 +413,7 @@ class UserController : BaseController
         return "1";
     }
 
-    @Middleware(JwtAuthMiddleware.stringof)
+    @Middleware(UserAuthMiddleware.stringof)
     @Action string editPassword(){
 
         string current_password = request.post("current_password");
@@ -472,7 +479,7 @@ class UserController : BaseController
         // .setContent(view.render("user/home"));
     }
 
-    @Middleware(JwtAuthMiddleware.stringof)
+    @Middleware(UserAuthMiddleware.stringof)
     @Action Response logout()
     {
         Identity currentUser = this.request.auth().user();

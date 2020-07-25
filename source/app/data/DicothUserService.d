@@ -60,6 +60,7 @@ class DicothUserService : UserService {
 
         details.id = cast(ulong)user.id;
         details.name = user.username;
+        details.salt = user.salt;
         details.addClaim(ClaimTypes.Nickname, user.nickname);
         details.addClaim("avatar", user.avatar);
 

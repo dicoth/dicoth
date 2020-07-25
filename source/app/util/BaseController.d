@@ -1,5 +1,6 @@
 module app.util.BaseController;
 
+import app.auth.Constants;
 
 import app.component.user.repository.UserRepository;
 import app.component.user.model.User;
@@ -43,6 +44,8 @@ class BaseController : Controller
 		_cManager = Application.instance.entityManager();
         // _cManager = defaultEntityManagerFactory().currentEntityManager();
         // _conf = configManager().config("hunt");
+        this.tokenCookieName = USER_JWT_TOKEN_NAME;
+        this.authenticationScheme = AuthenticationScheme.Bearer;
     }
 
     hunt.cache.Cache.Cache cache() {
@@ -56,14 +59,15 @@ class BaseController : Controller
         view.assign("passport_profile", "/settings");
         view.assign("author", "DLang Chinese Forum");
         view.assign("keywords", "DLang,D语言,Hunt-Framework,DLangchina,DLang中文论坛");
-         string tokenString = request().auth().token();
-        // string tokenString = request.header(HttpHeader.AUTHORIZATION);
+
+        // auth = request().auth(USER_AUTH_COOKIE_NAME, AuthenticationScheme.Bearer);
+        string tokenString = request().auth().token(); // request().bearerToken(); //  
         // if(tokenString.empty)
         // {
-        //     tokenString = request.cookie("__auth_token__");
+        //     tokenString = request.cookie(USER_AUTH_COOKIE_NAME);
         // }
 
-        info("tokenString=>", tokenString);
+        version(HUNT_DEBUG) info("tokenString=>", tokenString);
 
         if(!tokenString.empty) {
             auto baseUserInfo = getInfo(tokenString);

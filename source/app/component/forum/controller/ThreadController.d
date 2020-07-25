@@ -39,7 +39,7 @@ class ThreadController : BaseController
         // auto middle = new UserAuthMiddleware();
         // middle.setForceLoginMCA(["forum.thread.create", "forum.thread.editpage", "forum.thread.edit", "forum.thread.reply"]);
         // this.addMiddleware(middle);
-        this.addMiddleware(new JwtAuthMiddleware());
+        // this.addMiddleware(new JwtAuthMiddleware());
     }
 
     @Action

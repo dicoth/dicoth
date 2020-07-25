@@ -1,5 +1,7 @@
 module app.component.system.controller.AdminBaseController;
 
+import app.middleware;
+
 import app.component.system.model.Menu;
 import app.component.system.model.User;
 import app.component.system.repository.MenuRepository;
@@ -31,7 +33,7 @@ class AdminBaseController : Controller {
 
 	this() {
 		_cManager = Application.instance.entityManager();
-		addMiddleware(new JwtAuthMiddleware());
+		addMiddleware(new AdminAuthMiddleware());
 	}
 	
     BreadcrumbsManager breadcrumbsManager() {

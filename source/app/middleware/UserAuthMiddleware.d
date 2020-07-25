@@ -1,5 +1,33 @@
 module app.middleware.UserAuthMiddleware;
 
+import app.auth;
+import hunt.framework;
+import std.range;
+
+
+/**
+ * 
+ */
+class UserAuthMiddleware : JwtAuthMiddleware {
+    shared static this() {
+        MiddlewareInterface.register!(typeof(this));
+    }
+    
+    override protected JwtToken getToken(Request request) {
+        string tokenString = request.bearerToken();
+
+        if(tokenString.empty)
+            tokenString = request.cookie(USER_JWT_TOKEN_NAME);
+
+        if(tokenString.empty)
+            return null;
+        return new JwtToken(tokenString, USER_JWT_TOKEN_NAME);
+    }
+}
+
+
+
+
 // import hunt.framework;
 // // import hunt.framework.application.MiddlewareInterface;
 // import hunt.framework.http.Request;
