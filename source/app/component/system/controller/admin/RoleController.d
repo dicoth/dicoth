@@ -70,7 +70,7 @@ class RoleController : AdminBaseController
         view.assign("permissions", (new PermissionRepository()).findAll());
         view.assign("groups", (new PermissionGroupRepository()).findAll());
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
             view.setLocale(lang).render("system/role/add"));
         return new Response(hb);        
@@ -131,7 +131,7 @@ class RoleController : AdminBaseController
         view.assign("rolePermissions", rolePermissions);
         view.assign("groups", (new PermissionGroupRepository()).findAll());
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.setLocale(lang).render("system/role/edit"));
         return new Response(hb);        
         // return new Response(request)

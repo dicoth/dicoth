@@ -6,25 +6,25 @@ import hunt.framework;
 import std.range;
 
 
-enum string ADMIN_AUTH_COOKIE_NAME = "__admin_jwt_token__";
-
-
 class AdminAuthMiddleware : JwtAuthMiddleware {
     shared static this() {
         MiddlewareInterface.register!(typeof(this));
+    }
+
+    override protected Response onRejected(Request request) {
+        return new RedirectResponse(request, url("system.user.login", null, "admin"));
     }
 
     override protected JwtToken getToken(Request request) {
         string tokenString = request.bearerToken();
 
         if(tokenString.empty)
-            tokenString = request.cookie(ADMIN_AUTH_COOKIE_NAME);
+            tokenString = request.cookie(ADMIN_JWT_TOKEN_NAME);
 
         if(tokenString.empty)
             return null;
-        // return new AdminJwtToken(tokenString);
         
-        return new JwtToken(tokenString, "admin-jwt-token");
+        return new JwtToken(tokenString, ADMIN_JWT_TOKEN_NAME);
     }
 }
 

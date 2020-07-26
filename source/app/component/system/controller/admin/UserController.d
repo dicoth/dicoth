@@ -2,6 +2,10 @@ module app.component.system.controller.admin.UserController;
 
 // import app.component.system.authentication.JwtToken;
 // import app.component.system.authentication.JwtUtil;
+import app.auth.Constants;
+import app.data.DicothAdminUserService;
+import app.middleware.AdminAuthMiddleware;
+
 import app.component.system.form.LoginForm;
 import app.component.system.helper.Password;
 import app.component.system.helper.Utils;
@@ -107,7 +111,7 @@ class UserController : AdminBaseController {
         view.assign("roles", (new RoleRepository()).findAll());
         view.assign("languages", (new LanguageRepository()).findEnable());
         
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         
 		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, 
         //     view.setLocale(lang).render("system/user/add"));
@@ -170,7 +174,7 @@ class UserController : AdminBaseController {
         view.assign("roles", (new RoleRepository()).findAll());
         view.assign("languages", (new LanguageRepository()).findEnable());
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         
 		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/edit"));
         return new Response(hb);
@@ -184,7 +188,7 @@ class UserController : AdminBaseController {
         auto repository = new UserRepository();
         view.assign("permissions", repository.findById( request.get!int("id", 0) ));
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         return view.setLocale(lang).render("system/user/edit");
     }
 
@@ -215,43 +219,65 @@ class UserController : AdminBaseController {
         }
 
         view.assign("user", user);
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         return view.setLocale(lang).render("system/user/profile");
     }
 
+    @WithoutMiddleware(AdminAuthMiddleware.stringof)
     @Action Response login(LoginForm loginForm) {
 
-        if(request.methodAsString() == HttpMethod.POST.asString()) {
-            auto result = loginForm.valid();
+        if(request.getMethod() == HttpMethod.POST.asString()) {
 
-            if(result.isValid()) {
-                string username = loginForm.username;
-                string password = loginForm.password;     
-                scope auto userRepository = new UserRepository(); 
-                User userModel = userRepository.findByEmail(username);
-                if(userModel is null) {
-                    assignError("Your email is not found or has been banned");
-                } else {
-                    string checkSalt = generateUserPassword(password, userModel.salt);
-                    if(checkSalt == userModel.password) {
-                        string tokenString = JwtUtil.sign(username, checkSalt);
-                        info("tokenString: ", tokenString);
-                        setLocale(userModel.language);
-                        info("user logined: ", toJson(userModel));
-                        // Application.instance().accessManager.addUser(userModel.id);
-                        Cookie langCookie = new Cookie("Content-Language", userModel.language);
-                        Cookie sessionCookie = new Cookie("__auth_token__", tokenString, 86400);
+        auto result = loginForm.valid();
 
-                        return new RedirectResponse(request, url("system.dashboard.dashboard", null, "admin"))
-                            .withCookie(langCookie)
-                            .withCookie(sessionCookie);                        
-                    } else {
-                        assignError("Wrong password!");
-                    }
-                }
+        if(result.isValid()) {
+
+            string username = loginForm.username;
+            string password = loginForm.password;
+            bool rememeber = false;
+
+            
+            UserService userService = new DicothAdminUserService();
+            string salt = userService.getSalt(username, password);
+                
+            Identity authUser = this.request().auth().signIn(username, password, salt,
+                rememeber, ADMIN_BASIC_TOKEN_NAME, AuthenticationScheme.Bearer);
+            
+            // string msg;
+            if(authUser.isAuthenticated()) {
+                string lang = authUser.claimAs!string("lang");
+                setLocale(lang);
+                Cookie langCookie = new Cookie("Content-Language", lang);
+
+                return new RedirectResponse(request, url("system.dashboard.dashboard", null, "admin"))
+                        .withCookie(langCookie);             
+
+                // scope auto userRepository = new UserRepository(); 
+                // User userModel = userRepository.findByEmail(username);
+                // if(userModel is null) {
+                //     assignError("Your email is not found or has been banned");
+                // } else {
+                    // string checkSalt = generateUserPassword(password, userModel.salt);
+                //     if(checkSalt == userModel.password) {
+                //         string tokenString = JwtUtil.sign(username, checkSalt);
+                //         info("tokenString: ", tokenString);
+                //         setLocale(userModel.language);
+                //         info("user logined: ", toJson(userModel));
+                //         // Application.instance().accessManager.addUser(userModel.id);
+                //         Cookie langCookie = new Cookie("Content-Language", userModel.language);
+                //         Cookie sessionCookie = new Cookie("__auth_token__", tokenString, 86400);
+
+                //         return new RedirectResponse(request, url("system.dashboard.dashboard", null, "admin"))
+                //             .withCookie(langCookie)
+                //             .withCookie(sessionCookie);                        
+                //     } else {
+                //         assignError("Wrong password!");
+                //     }
+                // }
             }
-        }
 
+        }
+        }
         // HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/user/login"));
         // return new Response(hb);
 
@@ -262,12 +288,24 @@ class UserController : AdminBaseController {
 
     @Action Response logout()
     {
-        Subject subject = cast(Subject)request.getAttribute(Subject.DEFAULT_NAME);
-        if(subject !is null) {
-            subject.logout();
+        Auth auth = this.request.auth();
+        Identity currentUser = auth.user();
+        if(currentUser.isAuthenticated()) {
+            string name = currentUser.name();
+            auth.signOut();
+            version(HUNT_DEBUG) info("The user [" ~ name ~ "] has logged out.");
+        } else {
+            version(HUNT_DEBUG) warning("No user logged in.");
         }
-        Cookie sessionCookie = new Cookie("__auth_token__", "", 0);
-        return new RedirectResponse(request, url("system.user.login", null, "admin"))
-                        .withCookie(sessionCookie);
+
+        return new RedirectResponse(request, url("system.user.login", null, "admin"));
+
+        // Subject subject = cast(Subject)request.getAttribute(Subject.DEFAULT_NAME);
+        // if(subject !is null) {
+        //     subject.logout();
+        // }
+        // Cookie sessionCookie = new Cookie("__auth_token__", "", 0);
+        // return new RedirectResponse(request, url("system.user.login", null, "admin"))
+        //                 .withCookie(sessionCookie);
     }
 }

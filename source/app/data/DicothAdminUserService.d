@@ -1,29 +1,32 @@
-module app.data.DicothUserService;
+module app.data.DicothAdminUserService;
 
 import hunt.framework;
 
 import hunt.logging.ConsoleLogger;
 
-import app.component.user.repository.UserRepository;
-import app.component.user.helper.AuthHelper;
-import app.component.user.model.User;
+import app.component.system.repository.UserRepository;
+
+import app.component.system.helper.Password;
+import app.component.system.model.User;
+import app.component.system.model.Role;
+
+// import app.component.user.repository.UserRepository;
+// import app.component.user.helper.AuthHelper;
+// import app.component.user.model.User;
 
 /**
  * 
  */
-class DicothUserService : UserService {
+class DicothAdminUserService : UserService {
 
     UserDetails authenticate(string username, string password) {
         UserRepository repo = new UserRepository();
-        User userinfo = repo.findUserByUsername(username);
-        if(userinfo is null) {
-            userinfo = repo.findUserByEmail(username);
-        }
+        User userinfo =  repo.findByEmail(username);
 
         if(userinfo is null)
             return null;
 
-        string passwordInput = AuthHelper.signPassword(password, userinfo.salt);
+        string passwordInput = generateUserPassword(password, userinfo.salt); // AuthHelper.signPassword(password, userinfo.salt);
         if(userinfo.password != passwordInput) {
             return null;
         }
@@ -33,7 +36,7 @@ class DicothUserService : UserService {
 
     string getSalt(string name, string password) {   
         UserRepository repo = new UserRepository();
-        User userInfo = repo.findUserByUsername(name);
+        User userInfo = repo.findByEmail(name);
         if(userInfo is null)
             return null;
 
@@ -43,7 +46,7 @@ class DicothUserService : UserService {
     UserDetails getByName(string name) {
         UserRepository repo = new UserRepository();
 
-        User userInfo = repo.findUserByUsername(name);
+        User userInfo = repo.findByEmail(name);
         if(userInfo is null)
             return null;
 
@@ -59,10 +62,12 @@ class DicothUserService : UserService {
         UserDetails details = new UserDetails();
 
         details.id = cast(ulong)user.id;
-        details.name = user.username;
+        details.name = user.email;
         details.salt = user.salt;
-        details.addClaim(ClaimTypes.Nickname, user.nickname);
-        details.addClaim("avatar", user.avatar);
+        details.fullName = user.name;
+        // details.addClaim(ClaimTypes.Nickname, user.nickname);
+        // details.addClaim("avatar", user.avatar);
+        details.addClaim("lang", user.language);
 
         return details;
     }
@@ -76,10 +81,10 @@ class DicothUserService : UserService {
 
         // UserDetails details = new UserDetails();
         // details.id = cast(ulong)userInfo.id;
-        // details.name = userInfo.username;
+        // details.name = userInfo.email;
+        // details.salt = userInfo.salt;
         // details.permissions
 
-        // return details;
         return mapping(userInfo);
     }
 }

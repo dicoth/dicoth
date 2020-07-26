@@ -44,7 +44,7 @@ class SettingController : AdminBaseController {
             auto ret = settingRepository.insert(setting);
             return new RedirectResponse(request, url("system.setting.list", null, "admin"));
         }  
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
  
 		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/add"));
         // return new Response(hb);
@@ -74,13 +74,13 @@ class SettingController : AdminBaseController {
             settingItem.id = id;
             settingItem.updated = updated;
             auto ret = settingRepository.save(settingItem);
-            string lang = findLocal();
+            string lang = findLocal(request.auth().user());
             return new RedirectResponse(request, url("system.setting.list", null, "admin"));
        
         }
         view.assign("setting", settingItem);
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         
 		// HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.render("system/setting/edit"));
         // return new Response(hb);

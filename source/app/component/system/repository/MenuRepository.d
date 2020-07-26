@@ -41,7 +41,7 @@ class MenuRepository : EntityRepository!(Menu, int) {
             .getResultList();
     }
 
-    MenuItemViewModel[] getAllowdMenus(Subject subject){
+    MenuItemViewModel[] getAllowdMenus(Identity subject){
         MenuItemViewModel[] data;
         // TODO: Tasks pending completion -@zhangxueping at 2019/5/30 下午6:26:55
         // 

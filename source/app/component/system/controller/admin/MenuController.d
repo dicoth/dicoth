@@ -48,7 +48,7 @@ class MenuController : AdminBaseController {
         MenuRepository menuRepository = new MenuRepository();
         int errorNum = 0;
 
-        string lang = findLocal();
+        string lang = findLocal(request.auth().user());
         if (request.methodAsString() == HttpMethod.POST.asString()) {
             int now = cast(int) time();
 
@@ -195,7 +195,7 @@ class MenuController : AdminBaseController {
 
     bool autoUpdateLanguage(string keyword, string showname, string language = "") {
         int now = cast(int) time();
-        if (language == "") language = findLocal();
+        if (language == "") language = findLocal(request.auth().user());
         auto repository = new LangPackageRepository();
         LangPackage lpn;
         lpn = repository.findByKeyword(language, keyword);

@@ -1,5 +1,6 @@
 module app.component.system.controller.AdminBaseController;
 
+import app.auth.Constants;
 import app.middleware;
 
 import app.component.system.model.Menu;
@@ -33,6 +34,10 @@ class AdminBaseController : Controller {
 
 	this() {
 		_cManager = Application.instance.entityManager();
+		
+        this.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
+        this.authenticationScheme = AuthenticationScheme.Bearer;
+
 		addMiddleware(new AdminAuthMiddleware());
 	}
 	
@@ -52,21 +57,39 @@ class AdminBaseController : Controller {
 	override bool before() {
 		this.flashMessages();
 
-		Subject subject = cast(Subject)request.getAttribute(Subject.DEFAULT_NAME);
+        Identity user = request().auth().user(); // request().bearerToken(); //  
+		if(user.isAuthenticated()) {
+			import hunt.logging.ConsoleLogger;
 
-		if(subject !is null && subject.isAuthenticated()) {
+			// Claim[] claims =  user.claims;
+ 			// foreach(Claim c; claims) {
+			// 	tracef("%s, %s", c.type, c.value);
+			// }
+			string fullName = user.claimAs!(string)(ClaimTypes.FullName);
 			auto repository = new MenuRepository();
 			view.assign("isLogin", "YES");
-			User currentUser = cast(User) subject.getPrincipal();
-			assert(currentUser !is null);
-			view.assign("nowUser", currentUser);
-
-			MenuItemViewModel[] menuData = repository.getAllowdMenus(subject);
+			view.assign("username", fullName);
+			MenuItemViewModel[] menuData = repository.getAllowdMenus(user);
 			view.assign("menusJsonData", menuData);
-
 		} else {
 			view.assign("isLogin", "NO");
 		}
+
+		// Subject subject = cast(Subject)request.getAttribute(Subject.DEFAULT_NAME);
+
+		// if(subject !is null && subject.isAuthenticated()) {
+		// 	auto repository = new MenuRepository();
+		// 	view.assign("isLogin", "YES");
+		// 	User currentUser = cast(User) subject.getPrincipal();
+		// 	assert(currentUser !is null);
+		// 	view.assign("nowUser", currentUser);
+
+		// 	MenuItemViewModel[] menuData = repository.getAllowdMenus(subject);
+		// 	view.assign("menusJsonData", menuData);
+
+		// } else {
+		// 	view.assign("isLogin", "NO");
+		// }
 
 		if (request.methodAsString() == HttpMethod.OPTIONS.asString())
 			return false;
@@ -85,7 +108,10 @@ class AdminBaseController : Controller {
 	}
 
 	Response ResponseView (string viewPath, string lang = "") {
-		lang = lang == "" ? findLocal() : lang;
+		lang = lang == "" ? findLocal(request.auth().user()) : lang;
+
+		import hunt.logging.ConsoleLogger;
+		tracef("lang: ", lang);
 		
 		HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.setLocale(lang).render(viewPath));
         return new Response(hb);

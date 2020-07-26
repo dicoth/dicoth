@@ -2,7 +2,7 @@ module app.auth.AdminBasicAuthRealm;
 
 // import app.auth.AdminJwtToken;
 import app.auth.Constants;
-import app.data.DicothUserService;
+import app.data.DicothAdminUserService;
 
 import hunt.framework.auth;
 import hunt.shiro;
@@ -14,10 +14,10 @@ import hunt.logging.ConsoleLogger;
  * 
  */
 class AdminBasicAuthRealm : BasicAuthRealm {
-    private DicothUserService _userService;
+    private DicothAdminUserService _userService;
 
     this() {
-        _userService = new DicothUserService();
+        _userService = new DicothAdminUserService();
     }
     
     override bool supports(AuthenticationToken token) {

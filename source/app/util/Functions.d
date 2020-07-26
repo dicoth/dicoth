@@ -53,9 +53,13 @@ string getAttachmentUrl(int id)
 }
 
 import hunt.Exceptions;
+import std.range;
 
-string findLocal() {
-    // string localLanguage = config().application.defaultLanguage;
+string findLocal(Identity user) {
+    string localLanguage = user.claimAs!string("lang");
+    if(localLanguage.empty()) {
+        localLanguage = config().application.defaultLanguage;
+    }
     // auto userInfo = app().accessManager.user;
     // if(userInfo !is null){
     //     auto user = new UserRepository().find(userInfo.id);
@@ -63,10 +67,8 @@ string findLocal() {
     //         localLanguage = user.language;
     //     }
     // }
-    // return localLanguage;
+    return localLanguage;
 
-    implementationMissing(false);
-    return "zh-CN";
 }
 
 string findConfig(string key) {

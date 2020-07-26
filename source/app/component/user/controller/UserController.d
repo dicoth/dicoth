@@ -1,6 +1,7 @@
 module app.component.user.controller.UserController;
 
 import app.auth;
+import app.data.DicothUserService;
 import app.middleware;
 
 import app.task.EmailTask;
@@ -279,7 +280,6 @@ class UserController : BaseController
         string password = form.password;
         bool rememeber = form.remember_me > 0;
 
-        import app.data.DicothUserService;
         UserService userService = new DicothUserService();
         string salt = userService.getSalt(username, password);
 
@@ -482,10 +482,11 @@ class UserController : BaseController
     @Middleware(UserAuthMiddleware.stringof)
     @Action Response logout()
     {
-        Identity currentUser = this.request.auth().user();
+        Auth auth = this.request.auth();
+        Identity currentUser = auth.user();
         if(currentUser.isAuthenticated()) {
             string name = currentUser.name();
-            this.request().auth().signOut();
+            auth.signOut();
             version(HUNT_DEBUG) info("The user [" ~ name ~ "] has logged out.");
         } else {
             version(HUNT_DEBUG) warning("No user logged in.");
