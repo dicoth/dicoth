@@ -12,6 +12,11 @@ class UserAuthMiddleware : JwtAuthMiddleware {
     shared static this() {
         MiddlewareInterface.register!(typeof(this));
     }
+
+    this() {
+        this.guardName = USER_GUARD_NAME;
+        super();
+    }
     
     override protected JwtToken getToken(Request request) {
         string tokenString = request.bearerToken();

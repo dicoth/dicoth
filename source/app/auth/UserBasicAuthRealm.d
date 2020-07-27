@@ -18,6 +18,8 @@ class UserBasicAuthRealm : BasicAuthRealm {
 
     this() {
         _userService = new DicothUserService();
+        this.setName = typeof(this).stringof;
+        this.guardName = USER_GUARD_NAME;
     }
     
     override bool supports(AuthenticationToken token) {

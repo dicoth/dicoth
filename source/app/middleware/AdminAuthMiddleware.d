@@ -11,6 +11,11 @@ class AdminAuthMiddleware : JwtAuthMiddleware {
         MiddlewareInterface.register!(typeof(this));
     }
 
+    this() {
+        this.guardName = ADMIN_GUARD_NAME;
+        super();
+    }
+
     override protected Response onRejected(Request request) {
         return new RedirectResponse(request, url("system.user.login", null, "admin"));
     }

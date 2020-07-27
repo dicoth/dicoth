@@ -18,6 +18,8 @@ class AdminJwtAuthRealm : JwtAuthRealm {
 
     this() {
         _userService = new DicothAdminUserService();
+        this.setName = typeof(this).stringof;
+        this.guardName = ADMIN_GUARD_NAME;
     }
     
     override bool supports(AuthenticationToken token) {

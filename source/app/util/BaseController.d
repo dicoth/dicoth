@@ -44,8 +44,15 @@ class BaseController : Controller
 		_cManager = Application.instance.entityManager();
         // _cManager = defaultEntityManagerFactory().currentEntityManager();
         // _conf = configManager().config("hunt");
-        this.tokenCookieName = USER_JWT_TOKEN_NAME;
-        this.authenticationScheme = AuthenticationScheme.Bearer;
+        // this.tokenCookieName = USER_JWT_TOKEN_NAME;
+        // this.authenticationScheme = AuthenticationScheme.Bearer;
+
+        AuthOptions options = new AuthOptions();
+        options.tokenCookieName = USER_JWT_TOKEN_NAME;
+        options.scheme = AuthenticationScheme.Bearer;
+        options.guardName = USER_GUARD_NAME;
+        
+        this.authOptions = options;        
     }
 
     hunt.cache.Cache.Cache cache() {
