@@ -22,15 +22,15 @@ class AdminBasicAuthRealm : BasicAuthRealm {
         this.guardName = ADMIN_GUARD_NAME;
     }
     
-    override bool supports(AuthenticationToken token) {
-        version(HUNT_AUTH_DEBUG) info(typeid(cast(Object)token));
+    // override bool supports(AuthenticationToken token) {
+    //     version(HUNT_AUTH_DEBUG) info(typeid(cast(Object)token));
         
-        UsernamePasswordToken t = cast(UsernamePasswordToken)token;
-        if(t is null)
-            return false;
-        tracef("name: %s", t.name());
-        return t.name() ==  ADMIN_BASIC_TOKEN_NAME;
-    }
+    //     UsernamePasswordToken t = cast(UsernamePasswordToken)token;
+    //     if(t is null)
+    //         return false;
+    //     tracef("name: %s", t.name());
+    //     return t.name() ==  ADMIN_BASIC_TOKEN_NAME;
+    // }
 
     override protected UserService getUserService() {
         return _userService;

@@ -240,8 +240,7 @@ class UserController : AdminBaseController {
             UserService userService = new DicothAdminUserService();
             string salt = userService.getSalt(username, password);
                 
-            Identity authUser = this.request().auth().signIn(username, password, salt,
-                rememeber, ADMIN_BASIC_TOKEN_NAME, AuthenticationScheme.Bearer);
+            Identity authUser = this.request().auth().signIn(username, password, salt, rememeber);
             
             // string msg;
             if(authUser.isAuthenticated()) {

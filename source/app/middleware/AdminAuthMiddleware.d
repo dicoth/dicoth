@@ -12,7 +12,6 @@ class AdminAuthMiddleware : AuthMiddleware {
     }
 
     this() {
-        this.guardName = ADMIN_GUARD_NAME;
         super();
     }
 
@@ -22,13 +21,17 @@ class AdminAuthMiddleware : AuthMiddleware {
 
     override protected JwtToken getToken(Request request) {
         string tokenString = request.bearerToken();
+        string tokenCookieName = request.authOptions.tokenCookieName;
+
+        import hunt.logging.ConsoleLogger;
+        warningf("request: %s, predefined: %s", tokenCookieName, ADMIN_JWT_TOKEN_NAME);
 
         if(tokenString.empty)
-            tokenString = request.cookie(ADMIN_JWT_TOKEN_NAME);
+            tokenString = request.cookie(tokenCookieName);
 
         if(tokenString.empty)
             return null;
         
-        return new JwtToken(tokenString, ADMIN_JWT_TOKEN_NAME);
+        return new JwtToken(tokenString, tokenCookieName);
     }
 }

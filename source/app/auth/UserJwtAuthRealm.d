@@ -22,15 +22,15 @@ class UserJwtAuthRealm : JwtAuthRealm {
         this.guardName = USER_GUARD_NAME;
     }
     
-    override bool supports(AuthenticationToken token) {
-        // warning(typeid(cast(Object)token));
-        JwtToken t = cast(JwtToken)token;
-        if(t is null)
-            return false;
+    // override bool supports(AuthenticationToken token) {
+    //     // warning(typeid(cast(Object)token));
+    //     JwtToken t = cast(JwtToken)token;
+    //     if(t is null)
+    //         return false;
             
-        tracef("name: %s", t.name());
-        return t.name() ==  USER_JWT_TOKEN_NAME; 
-    }
+    //     tracef("name: %s", t.name());
+    //     return t.name() ==  USER_JWT_TOKEN_NAME; 
+    // }
 
     override protected UserService getUserService() {
         return _userService;

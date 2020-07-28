@@ -283,8 +283,7 @@ class UserController : BaseController
         UserService userService = new DicothUserService();
         string salt = userService.getSalt(username, password);
 
-        Identity authUser = this.request.auth().signIn(username, password, salt,
-            rememeber, USER_BASIC_TOKEN_NAME, AuthenticationScheme.Bearer);
+        Identity authUser = this.request.auth().signIn(username, password, salt, rememeber);
         
         string msg;
         if(authUser.isAuthenticated()) {

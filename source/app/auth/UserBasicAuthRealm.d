@@ -22,16 +22,16 @@ class UserBasicAuthRealm : BasicAuthRealm {
         this.guardName = USER_GUARD_NAME;
     }
     
-    override bool supports(AuthenticationToken token) {
-        // warning(typeid(cast(Object)token));
+    // override bool supports(AuthenticationToken token) {
+    //     // warning(typeid(cast(Object)token));
         
-        UsernamePasswordToken t = cast(UsernamePasswordToken)token;
-        if(t is null)
-            return false;
-        bool r = t.name() ==  USER_BASIC_TOKEN_NAME; 
-        tracef("name: %s, result: %s", t.name(), r);
-        return r;
-    }
+    //     UsernamePasswordToken t = cast(UsernamePasswordToken)token;
+    //     if(t is null)
+    //         return false;
+    //     bool r = t.name() ==  USER_BASIC_TOKEN_NAME; 
+    //     tracef("name: %s, result: %s", t.name(), r);
+    //     return r;
+    // }
 
     override protected UserService getUserService() {
         return _userService;
