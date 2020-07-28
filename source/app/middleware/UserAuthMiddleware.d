@@ -8,7 +8,7 @@ import std.range;
 /**
  * 
  */
-class UserAuthMiddleware : JwtAuthMiddleware {
+class UserAuthMiddleware : AuthMiddleware {
     shared static this() {
         MiddlewareInterface.register!(typeof(this));
     }
