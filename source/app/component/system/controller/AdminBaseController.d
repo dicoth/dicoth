@@ -112,10 +112,9 @@ class AdminBaseController : Controller {
     }
 
     Response ResponseView (string viewPath, string lang = "") {
-        lang = lang == "" ? findLocal(request.auth().user()) : lang;
-
         import hunt.logging.ConsoleLogger;
-        tracef("lang: ", lang);
+        lang = lang == "" ? findLocal(request.auth().user()) : lang;
+        tracef("lang: %s", lang);
         
         HttpBody hb = HttpBody.create(MimeType.TEXT_HTML_VALUE, view.setLocale(lang).render(viewPath));
         return new Response(hb);

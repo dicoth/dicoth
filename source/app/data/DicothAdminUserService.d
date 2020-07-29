@@ -65,8 +65,7 @@ class DicothAdminUserService : UserService {
         details.name = user.email;
         details.salt = user.salt;
         details.fullName = user.name;
-        // details.addClaim(ClaimTypes.Nickname, user.nickname);
-        // details.addClaim("avatar", user.avatar);
+        
         details.addClaim("lang", user.language);
 
         return details;

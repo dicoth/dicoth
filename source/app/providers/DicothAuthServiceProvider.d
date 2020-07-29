@@ -11,12 +11,12 @@ import poodinis;
 
 class DicothAuthServiceProvider : AuthServiceProvider {
     
-    override void register() {
+    // override void register() {
 
-        serviceContainer().register!(AuthorizingRealm, UserBasicAuthRealm).newInstance;
-        serviceContainer().register!(AuthorizingRealm, UserJwtAuthRealm).newInstance;
+    //     serviceContainer().register!(AuthorizingRealm, UserBasicAuthRealm).newInstance;
+    //     serviceContainer().register!(AuthorizingRealm, UserJwtAuthRealm).newInstance;
         
-        serviceContainer().register!(AuthorizingRealm, AdminBasicAuthRealm).newInstance;
-        serviceContainer().register!(AuthorizingRealm, AdminJwtAuthRealm).newInstance;
-    }
+    //     serviceContainer().register!(AuthorizingRealm, AdminBasicAuthRealm).newInstance;
+    //     serviceContainer().register!(AuthorizingRealm, AdminJwtAuthRealm).newInstance;
+    // }
 }

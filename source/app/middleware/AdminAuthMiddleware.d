@@ -23,9 +23,6 @@ class AdminAuthMiddleware : AuthMiddleware {
         string tokenString = request.bearerToken();
         string tokenCookieName = request.authOptions.tokenCookieName;
 
-        import hunt.logging.ConsoleLogger;
-        warningf("request: %s, predefined: %s", tokenCookieName, ADMIN_JWT_TOKEN_NAME);
-
         if(tokenString.empty)
             tokenString = request.cookie(tokenCookieName);
 

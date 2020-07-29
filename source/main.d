@@ -1,4 +1,6 @@
 
+
+import app.auth;
 import app.providers;
 import app.component.system.model.LangPackage;
 import app.component.system.repository.LangPackageRepository;
@@ -23,10 +25,18 @@ void main(string[] args)
     //     i18n.merge(key, oneArray);
     // }
     
-    app.register!DicothAuthServiceProvider; 
+    // app.register!DicothAuthServiceProvider; 
     app.register!DicothBreadcrumbServiceProvider; 
 
     app.onBooted(() {
+
+        AuthService authService = app.auth();
+        
+        authService.addGuard(new AdminGuard());
+        authService.addGuard(new UserGuard());
+        authService.boot();
+
+
         TypeInfo_Class[string] all = MiddlewareInterface.all();
         foreach(string key, TypeInfo_Class typeInfo; all) {
             infof("Registed middleware: %s => %s", key, typeInfo.toString());
@@ -35,7 +45,7 @@ void main(string[] args)
 
         // app.route().group("admin").withMiddleware(JwtAuthMiddleware.stringof);
         // app.route().group("admin").get("index.test").withoutMiddleware(JwtAuthMiddleware.stringof);        
-    });    
+    });  
 
     app.run(args);
 }
