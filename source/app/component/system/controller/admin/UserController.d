@@ -237,10 +237,10 @@ class UserController : AdminBaseController {
             bool rememeber = false;
 
             
-            UserService userService = new DicothAdminUserService();
-            string salt = userService.getSalt(username, password);
+            // UserService userService = new DicothAdminUserService();
+            // string salt = userService.getSalt(username, password);
                 
-            Identity authUser = this.request().auth().signIn(username, password, salt, rememeber);
+            Identity authUser = this.request().auth().signIn(username, password, rememeber);
             
             // string msg;
             if(authUser.isAuthenticated()) {

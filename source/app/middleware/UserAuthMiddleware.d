@@ -13,22 +13,23 @@ class UserAuthMiddleware : AuthMiddleware {
         MiddlewareInterface.register!(typeof(this));
     }
 
-    this() {
-        super();
-    }
+    // override protected Response onRejected(Request request) {
+    //     return new RedirectResponse(request, url("system.user.login", null, "admin"));
+    // }
+
+    // // this() {
+    // //     super();
+    // // }
     
-    override protected JwtToken getToken(Request request) {
-        string tokenString = request.bearerToken();
-        string tokenCookieName = request.authOptions.tokenCookieName;
+    // override protected JwtToken getToken(Request request) {
+    //     string tokenString = request.bearerToken();
+    //     string tokenCookieName = request.auth().tokenCookieName();
 
-        import hunt.logging.ConsoleLogger;
-        warningf("request: %s, predefined: %s", tokenCookieName, USER_JWT_TOKEN_NAME);
+    //     if(tokenString.empty)
+    //         tokenString = request.cookie(tokenCookieName);
 
-        if(tokenString.empty)
-            tokenString = request.cookie(tokenCookieName);
-
-        if(tokenString.empty)
-            return null;
-        return new JwtToken(tokenString, tokenCookieName);
-    }
+    //     if(tokenString.empty)
+    //         return null;
+    //     return new JwtToken(tokenString, tokenCookieName);
+    // }
 }

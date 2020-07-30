@@ -35,12 +35,12 @@ class AdminBaseController : Controller {
     this() {
         _cManager = Application.instance.entityManager();
 
-        AuthOptions options = new AuthOptions();
-        options.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
-        options.scheme = AuthenticationScheme.Bearer;
-        options.guardName = ADMIN_GUARD_NAME;
+        // AuthOptions options = new AuthOptions();
+        // options.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
+        // options.guardName = ADMIN_GUARD_NAME;
         
-        this.authOptions = options;
+        // this.authOptions.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
+        // this.authOptions.guardName = ADMIN_GUARD_NAME;
 
         addMiddleware(new AdminAuthMiddleware());
     }

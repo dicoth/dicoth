@@ -11,24 +11,24 @@ class AdminAuthMiddleware : AuthMiddleware {
         MiddlewareInterface.register!(typeof(this));
     }
 
-    this() {
-        super();
-    }
+    // this() {
+    //     super();
+    // }
 
     override protected Response onRejected(Request request) {
         return new RedirectResponse(request, url("system.user.login", null, "admin"));
     }
 
-    override protected JwtToken getToken(Request request) {
-        string tokenString = request.bearerToken();
-        string tokenCookieName = request.authOptions.tokenCookieName;
+    // override protected JwtToken getToken(Request request) {
+    //     string tokenString = request.bearerToken();
+    //     string tokenCookieName = request.auth().tokenCookieName(); // authOptions.tokenCookieName;
 
-        if(tokenString.empty)
-            tokenString = request.cookie(tokenCookieName);
+    //     if(tokenString.empty)
+    //         tokenString = request.cookie(tokenCookieName);
 
-        if(tokenString.empty)
-            return null;
+    //     if(tokenString.empty)
+    //         return null;
         
-        return new JwtToken(tokenString, tokenCookieName);
-    }
+    //     return new JwtToken(tokenString, tokenCookieName);
+    // }
 }

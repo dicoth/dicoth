@@ -25,22 +25,29 @@ void main(string[] args)
     //     i18n.merge(key, oneArray);
     // }
     
-    // app.register!DicothAuthServiceProvider; 
+    app.register!DicothAuthServiceProvider; 
     app.register!DicothBreadcrumbServiceProvider; 
 
     app.onBooted(() {
 
-        AuthService authService = app.auth();
+        // AuthService authService = app.auth();
         
-        authService.addGuard(new AdminGuard());
-        authService.addGuard(new UserGuard());
-        authService.boot();
+        // authService.addGuard(new AdminGuard());
+        // authService.addGuard(new UserGuard());
+        // authService.boot();
 
 
         TypeInfo_Class[string] all = MiddlewareInterface.all();
         foreach(string key, TypeInfo_Class typeInfo; all) {
             infof("Registed middleware: %s => %s", key, typeInfo.toString());
         }
+
+        RouteGroup adminGroup = app.route().group("admin");
+        adminGroup.guardName = ADMIN_GUARD_NAME;
+
+        RouteGroup userGroup = app.route().group();
+        userGroup.guardName = USER_GUARD_NAME;
+
         // app.route().get("index.about").withoutMiddleware!(JwtAuthMiddleware)();
 
         // app.route().group("admin").withMiddleware(JwtAuthMiddleware.stringof);

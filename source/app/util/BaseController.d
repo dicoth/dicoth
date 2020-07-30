@@ -47,12 +47,13 @@ class BaseController : Controller
         // this.tokenCookieName = USER_JWT_TOKEN_NAME;
         // this.authenticationScheme = AuthenticationScheme.Bearer;
 
-        AuthOptions options = new AuthOptions();
-        options.tokenCookieName = USER_JWT_TOKEN_NAME;
-        options.scheme = AuthenticationScheme.Bearer;
-        options.guardName = USER_GUARD_NAME;
+        // AuthOptions options = new AuthOptions();
+        // options.tokenCookieName = USER_JWT_TOKEN_NAME;
+        // // options.scheme = AuthenticationScheme.Bearer;
+        // options.guardName = USER_GUARD_NAME;
+        // options.tokenExpiration = config().auth.tokenExpiration;
         
-        this.authOptions = options;        
+        // this.authOptions = options;        
     }
 
     hunt.cache.Cache.Cache cache() {
@@ -67,14 +68,16 @@ class BaseController : Controller
         view.assign("author", "DLang Chinese Forum");
         view.assign("keywords", "DLang,D语言,Hunt-Framework,DLangchina,DLang中文论坛");
 
-        // auth = request().auth(USER_AUTH_COOKIE_NAME, AuthenticationScheme.Bearer);
+        // Auth auth = request().auth();
+        // auth.d
+
         string tokenString = request().auth().token(); // request().bearerToken(); //  
         // if(tokenString.empty)
         // {
         //     tokenString = request.cookie(USER_AUTH_COOKIE_NAME);
         // }
 
-        version(HUNT_DEBUG) info("tokenString=>", tokenString);
+        version(HUNT_DEBUG) warning("xxxx tokenString=>", tokenString);
 
         if(!tokenString.empty) {
             auto baseUserInfo = getInfo(tokenString);

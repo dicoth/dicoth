@@ -280,10 +280,10 @@ class UserController : BaseController
         string password = form.password;
         bool rememeber = form.remember_me > 0;
 
-        UserService userService = new DicothUserService();
-        string salt = userService.getSalt(username, password);
+        // UserService userService = new DicothUserService();
+        // string salt = userService.getSalt(username, password);
 
-        Identity authUser = this.request.auth().signIn(username, password, salt, rememeber);
+        Identity authUser = this.request.auth().signIn(username, password, rememeber);
         
         string msg;
         if(authUser.isAuthenticated()) {

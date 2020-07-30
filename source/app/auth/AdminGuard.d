@@ -7,8 +7,10 @@ import hunt.framework;
 /**
  * 
  */
-class AdminGuard : Guard {
+class AdminGuard : JwtGuard {
     this() {
         super(new DicothAdminUserService(), ADMIN_GUARD_NAME);
+        this.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
     }
+
 }
