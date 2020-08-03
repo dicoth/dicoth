@@ -43,17 +43,7 @@ class BaseController : Controller
     {
 		_cManager = Application.instance.entityManager();
         // _cManager = defaultEntityManagerFactory().currentEntityManager();
-        // _conf = configManager().config("hunt");
-        // this.tokenCookieName = USER_JWT_TOKEN_NAME;
-        // this.authenticationScheme = AuthenticationScheme.Bearer;
-
-        // AuthOptions options = new AuthOptions();
-        // options.tokenCookieName = USER_JWT_TOKEN_NAME;
-        // // options.scheme = AuthenticationScheme.Bearer;
-        // options.guardName = USER_GUARD_NAME;
-        // options.tokenExpiration = config().auth.tokenExpiration;
-        
-        // this.authOptions = options;        
+        // _conf = configManager().config("hunt");      
     }
 
     hunt.cache.Cache.Cache cache() {
@@ -77,7 +67,7 @@ class BaseController : Controller
         //     tokenString = request.cookie(USER_AUTH_COOKIE_NAME);
         // }
 
-        version(HUNT_DEBUG) warning("xxxx tokenString=>", tokenString);
+        version(HUNT_DEBUG) warning("tokenString=>", tokenString);
 
         if(!tokenString.empty) {
             auto baseUserInfo = getInfo(tokenString);

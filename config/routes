@@ -3,6 +3,7 @@
 #
 
 GET         /                            forum.forum.list
+GET         /test                            forum.forum.test
 GET         /forum/{id<[0-9]+>}          forum.forum.forum
 GET         /search                      forum.thread.search
 

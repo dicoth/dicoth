@@ -14,7 +14,6 @@ class DicothAuthServiceProvider : AuthServiceProvider {
     
     override void boot() {
         AuthService authService = container().resolve!AuthService();
-        // ApplicationConfig appConfig = container().resolve!ApplicationConfig();
         authService.addGuard(new AdminGuard());
         authService.addGuard(new UserGuard());
 

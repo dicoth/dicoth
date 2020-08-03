@@ -23,6 +23,17 @@ class ForumController : BaseController
     }
 
     @Action
+    string test()
+    {
+        import hunt.logging.ConsoleLogger;
+
+        string actionId = request.actionId();
+        warningf("actionId %s", actionId);
+
+        return "Only for test: " ~ actionId;
+    }
+
+    @Action
     Response list()
     {
         auto forumRepository = new ForumRepository(_cManager);

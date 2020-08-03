@@ -34,14 +34,6 @@ class AdminBaseController : Controller {
 
     this() {
         _cManager = Application.instance.entityManager();
-
-        // AuthOptions options = new AuthOptions();
-        // options.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
-        // options.guardName = ADMIN_GUARD_NAME;
-        
-        // this.authOptions.tokenCookieName = ADMIN_JWT_TOKEN_NAME;
-        // this.authOptions.guardName = ADMIN_GUARD_NAME;
-
         addMiddleware(new AdminAuthMiddleware());
     }
     
@@ -60,6 +52,9 @@ class AdminBaseController : Controller {
 
     override bool before() {
         this.flashMessages();
+
+        import hunt.logging.ConsoleLogger;
+        tracef("actionId: %s", request.actionId());
 
         Identity user = request().auth().user(); // request().bearerToken(); //  
         if(user.isAuthenticated()) {
