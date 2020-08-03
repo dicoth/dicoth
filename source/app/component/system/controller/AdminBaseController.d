@@ -34,7 +34,7 @@ class AdminBaseController : Controller {
 
     this() {
         _cManager = Application.instance.entityManager();
-        addMiddleware(new AdminAuthMiddleware());
+        // addMiddleware(new AdminAuthMiddleware());
     }
     
     BreadcrumbsManager breadcrumbsManager() {
@@ -64,6 +64,9 @@ class AdminBaseController : Controller {
              // foreach(Claim c; claims) {
             // 	tracef("%s, %s", c.type, c.value);
             // }
+
+            bool r = user.isPermitted("abcd");
+            
             string fullName = user.claimAs!(string)(ClaimTypes.FullName);
             auto repository = new MenuRepository();
             view.assign("isLogin", "YES");
@@ -157,13 +160,15 @@ class AdminBaseController : Controller {
 
     string getEmail()
     {
-        string jwttoken = request.cookie("__auth_token__");
-        auto email = JwtUtil.getUsername(jwttoken);
-        if(email !is null){
-            return  email;
-        }else{
-            return  "";
-        }
+        Identity user = request().auth().user();
+        return user.name();
+        // string jwttoken = request.cookie("__auth_token__");
+        // auto email = JwtUtil.getUsername(jwttoken);
+        // if(email !is null){
+        //     return  email;
+        // }else{
+        //     return  "";
+        // }
     }
 
 }

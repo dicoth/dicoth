@@ -223,7 +223,7 @@ class UserController : AdminBaseController {
         return view.setLocale(lang).render("system/user/profile");
     }
 
-    @WithoutMiddleware(AdminAuthMiddleware.stringof)
+    // @WithoutMiddleware(AdminAuthMiddleware.stringof)
     @Action Response login(LoginForm loginForm) {
 
         if(request.getMethod() == HttpMethod.POST.asString()) {
@@ -298,13 +298,5 @@ class UserController : AdminBaseController {
         }
 
         return new RedirectResponse(request, url("system.user.login", null, "admin"));
-
-        // Subject subject = cast(Subject)request.getAttribute(Subject.DEFAULT_NAME);
-        // if(subject !is null) {
-        //     subject.logout();
-        // }
-        // Cookie sessionCookie = new Cookie("__auth_token__", "", 0);
-        // return new RedirectResponse(request, url("system.user.login", null, "admin"))
-        //                 .withCookie(sessionCookie);
     }
 }
