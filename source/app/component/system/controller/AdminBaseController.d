@@ -34,7 +34,7 @@ class AdminBaseController : Controller {
 
     this() {
         _cManager = Application.instance.entityManager();
-        // addMiddleware(new AdminAuthMiddleware());
+        addMiddleware(new AdminAuthMiddleware());
     }
     
     BreadcrumbsManager breadcrumbsManager() {
@@ -51,10 +51,18 @@ class AdminBaseController : Controller {
     }
 
     override bool before() {
+        if (request.methodAsString() == HttpMethod.OPTIONS.asString())
+            return false;
+
         this.flashMessages();
 
         import hunt.logging.ConsoleLogger;
-        tracef("actionId: %s", request.actionId());
+        string actionId = request.actionId();
+        tracef("actionId: %s", actionId);
+        // if(actionId == "system.user.login") {
+        //     view.assign("isLogin", "NO");
+        //     return true;
+        // }
 
         Identity user = request().auth().user(); // request().bearerToken(); //  
         if(user.isAuthenticated()) {
@@ -93,8 +101,6 @@ class AdminBaseController : Controller {
         // 	view.assign("isLogin", "NO");
         // }
 
-        if (request.methodAsString() == HttpMethod.OPTIONS.asString())
-            return false;
         return true;
     }
 
@@ -162,13 +168,6 @@ class AdminBaseController : Controller {
     {
         Identity user = request().auth().user();
         return user.name();
-        // string jwttoken = request.cookie("__auth_token__");
-        // auto email = JwtUtil.getUsername(jwttoken);
-        // if(email !is null){
-        //     return  email;
-        // }else{
-        //     return  "";
-        // }
     }
 
 }

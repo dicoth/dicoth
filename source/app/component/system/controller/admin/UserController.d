@@ -223,7 +223,7 @@ class UserController : AdminBaseController {
         return view.setLocale(lang).render("system/user/profile");
     }
 
-    // @WithoutMiddleware(AdminAuthMiddleware.stringof)
+    @WithoutMiddleware(AdminAuthMiddleware.stringof)
     @Action Response login(LoginForm loginForm) {
 
         if(request.getMethod() == HttpMethod.POST.asString()) {

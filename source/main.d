@@ -46,8 +46,8 @@ void main(string[] args)
 
         RouteGroup adminGroup = app.route().group("admin");
         adminGroup.guardName = ADMIN_GUARD_NAME;
-        adminGroup.withMiddleware(AdminAuthMiddleware.stringof);
-        adminGroup.get("system.user.login").withoutMiddleware(AdminAuthMiddleware.stringof); 
+        // adminGroup.withMiddleware(AdminAuthMiddleware.stringof);
+        // adminGroup.get("system.user.login").withoutMiddleware(AdminAuthMiddleware.stringof); 
 
         RouteGroup userGroup = app.route().group();
         userGroup.guardName = USER_GUARD_NAME;

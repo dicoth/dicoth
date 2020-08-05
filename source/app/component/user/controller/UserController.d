@@ -492,15 +492,6 @@ class UserController : BaseController
         }
 
         return new RedirectResponse(this.request(), "/");
-
-        // Cookie sessionCookieToken = new Cookie("__auth_token__","",0);
-        // Cookie sessionCookieUser = new Cookie("userinfo","",0);
-        // Cookie sessionCookieSession = new Cookie("hunt_session","",0);
-
-        // return new RedirectResponse(this.request(), "/")
-        //         .withCookie(sessionCookieToken)
-        //         .withCookie(sessionCookieUser)
-        //         .withCookie(sessionCookieSession);
     }
    
     @Action
