@@ -6,7 +6,7 @@ import app.component.user.repository.UserRepository;
 import app.component.user.model.User;
 import app.util.Exceptions;
 
-import jwt;
+import hunt.jwt;
 
 // import app.util.JwtToken;
 // import app.util.JwtUtil;

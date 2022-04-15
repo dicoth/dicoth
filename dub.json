@@ -6,7 +6,7 @@
     "license": "Apache-2.0",
     "targetType": "executable",
     "dependencies": {
-        "hunt-framework": "~>3.3.0-rc.1",
-        "hunt-markdown" : "~>1.1.0"
+        "hunt-framework": "~>3.4.6",
+        "hunt-markdown" : "~>1.2.0"
     }
 }
